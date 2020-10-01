@@ -1,0 +1,29 @@
+package actions;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrameGerudok;
+import gui.dialogs.AboutDialog;
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+
+
+@SuppressWarnings("serial")
+public class AboutAction extends AbstractActionIcon {
+	
+	public AboutAction(Dimension d) {
+		
+		putValue(SMALL_ICON, iconGetter("/toolbar/about.png",d));
+		putValue(NAME, ("About"));
+	
+
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		
+		AboutDialog dialog = new AboutDialog(MainFrameGerudok.getInstance());
+		dialog.setVisible(true);
+	}
+
+}

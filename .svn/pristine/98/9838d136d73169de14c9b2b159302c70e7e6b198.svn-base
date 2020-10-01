@@ -1,0 +1,34 @@
+package actions;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.tree.TreePath;
+
+import view.MainFrame;
+import view.PopUpDemo;
+import view.Tree;
+
+public class PopClickListener extends MouseAdapter{
+	
+	public void mousePressed(MouseEvent e) {
+        if (e.isPopupTrigger())
+            doPop(e);
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        if (e.isPopupTrigger())
+            doPop(e);
+    }
+
+    private void doPop(MouseEvent e) {
+    	TreePath path = MainFrame.getInstance().getTree().getPathForLocation(e.getX(), e.getY());
+    	if (path==null)
+    		return;
+    	
+    	MainFrame.getInstance().getTree().setSelectionPath(path);
+        PopUpDemo menu = new PopUpDemo();
+        menu.show(e.getComponent(), e.getX(), e.getY());
+    }
+
+}

@@ -1,0 +1,59 @@
+package actions;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrameGerudok;
+import model.Document;
+import model.Page;
+import model.Project;
+import model.Workspace;
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
+
+
+public class DeleteNode extends AbstractActionIcon {
+
+	public DeleteNode(Dimension d) {
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+		putValue(SMALL_ICON, iconGetter("/menu/deleteAll.png", d));
+		putValue(NAME, ("Delete"));
+		putValue(SHORT_DESCRIPTION, ("Delete"));
+		setEnabled(false);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		JTree tree = MainFrameGerudok.getInstance().getTree();
+		Object selectedComponent = tree.getLastSelectedPathComponent();
+		Object[] path = tree.getSelectionPath().getPath();
+
+		if (((selectedComponent instanceof Workspace)) || (selectedComponent == null)) {
+			return;
+
+		} else if (selectedComponent instanceof Project) {
+
+			Project project = (Project) selectedComponent;
+			Workspace parent = (Workspace) project.getParent();
+			parent.deleteProject(project);
+
+		} else if (selectedComponent instanceof Document) {
+
+			Document document = (Document) selectedComponent;
+			Project project = (Project) path[1];
+			project.deleteDocument(document);
+
+		} else if (selectedComponent instanceof Page) {
+
+			Page page = (Page) selectedComponent;
+			Document parent = (Document) page.getParent();
+			parent.deletePage(page);
+
+		} 
+
+	}
+
+}

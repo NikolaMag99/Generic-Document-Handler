@@ -1,0 +1,34 @@
+package gui;
+
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+
+import actions.manager.ActionManager;
+import state.StateManager;
+
+public class SlotToolbarGerudok extends JToolBar {
+
+	private StateManager stateManager;
+
+	public SlotToolbarGerudok() {
+		super(SwingConstants.VERTICAL);
+		this.stateManager = new StateManager(null);
+		;
+
+		add(ActionManager.getInstance().getCircleAction());
+		add(ActionManager.getInstance().getRectangleAction());
+		add(ActionManager.getInstance().getTriangleAction());
+
+		addSeparator();
+
+		add(ActionManager.getInstance().getResizeAction());
+		add(ActionManager.getInstance().getRotateAction());
+
+		setFloatable(true);
+
+	}
+
+	public StateManager getStateManager() {
+		return stateManager;
+	}
+}

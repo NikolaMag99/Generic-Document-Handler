@@ -1,0 +1,64 @@
+package state;
+
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+
+import gui.MainFrame;
+import model.Page;
+import model.elements.SlotDevice;
+import view.PageView;
+
+public class SelectState extends State  {
+	
+	private PageView page;
+	
+	public SelectState(PageView pageView) {
+		this.page = pageView;
+	}
+
+	@Override
+	public void mousePressed(MouseEvent event) {
+		SlotDevice selectedSlot=null;
+		//page.getPage().getSelectedSlots().clear();
+		for(SlotDevice slotDevice:page.getPage().getSlotDevices()) {
+			if(slotDevice.getSlotPainter().elementAt(event.getPoint()) && event.isShiftDown()) {
+				page.getPage().setSelectSlot(slotDevice);
+				//System.out.println(page.getPage().getSelectSlot().getName());
+				page.getPage().getSelectedSlots().add(slotDevice);
+				page.startMoveState();
+				System.out.println("Radi");
+				return;
+			}
+			else if(slotDevice.getSlotPainter().elementAt(event.getPoint())) {
+				page.getPage().setSelectSlot(slotDevice);
+				
+				page.getPage().getSelectedSlots().add(slotDevice);
+				return;
+			}
+			
+			
+		}
+		page.getPage().setSelectSlot(null);
+		page.getPage().getSelectedSlots().clear();
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent event) {
+		page.startLassoState();
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

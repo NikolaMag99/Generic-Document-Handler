@@ -1,0 +1,77 @@
+package gui;
+
+import java.awt.BorderLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.SwingUtilities;
+
+import enums.Share;
+import model.Document;
+import model.Project;
+
+public class ShareDialog extends JDialog {
+
+	public ShareDialog(final JFrame parent, ArrayList<Document> document, Share share) {
+
+		super(parent, "Projects", true);
+		setSize(200, 200);
+		setLocationRelativeTo(parent);
+
+		
+
+		JLabel lblTekst = new JLabel("Select a project:");
+		add(lblTekst, BorderLayout.SOUTH);
+
+		DefaultListModel listsModel = new DefaultListModel();
+		Project parentProject = (Project) document.get(0).getParent();
+		for (Project project : MainFrame.getInstance().getWs().getProjects()) {
+			if (project.equals(parentProject))
+				continue;
+			listsModel.addElement(project);
+		}
+		JList listProj = new JList(listsModel);
+		add(listProj, BorderLayout.CENTER);
+
+		JButton select = new JButton("Select");
+		select.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent event) {
+				Object object = listProj.getSelectedValue();
+				if (object == null)
+					return;
+				if (object instanceof Project) {
+					Project p = (Project) object;
+					for (Project project : MainFrame.getInstance().getWs().getProjects()) {
+						if (p.equals(project)) {
+							for (Document document : document) {
+								if (share == Share.SHARE)
+									// proveriti
+									project.add(document);
+								else if (share == Share.DELETE) {
+									project.add(document);
+								}
+							}
+							break;
+						}
+					}
+
+					MainFrame.getInstance().getTree().updateUI();
+					SwingUtilities.updateComponentTreeUI(MainFrame.getInstance().getTree());
+					MainFrame.getInstance().revalidate();
+					MainFrame.getInstance().repaint();
+				}
+			}
+		});
+
+		add(select, BorderLayout.SOUTH);
+	}
+
+}

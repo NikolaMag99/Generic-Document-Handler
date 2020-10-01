@@ -1,0 +1,58 @@
+package view.painters;
+
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Shape;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Observer;
+
+import javax.swing.JPanel;
+
+import model.elements.Slot;
+import model.elements.SlotDevice;
+import state.StateManager;
+
+public abstract class SlotView extends JPanel implements Observer, Serializable {
+
+	protected Shape shape;
+	protected Shape oldShape;
+	private ArrayList<SlotDevice> graphicElements = new ArrayList<SlotDevice>();
+	private StateManager stateManager = null;
+
+	public SlotView(Slot slotElement) {
+		super();
+	}
+
+	public abstract void paint(Slot slotElement, Graphics2D g);
+
+	public abstract boolean elementAt(Point pos);
+
+	public abstract void draw();
+
+	public Shape getShape() {
+		return shape;
+	}
+
+	public void setShape(Shape shape) {
+		this.shape = shape;
+	}
+
+	public Shape getOldShape() {
+		return oldShape;
+	}
+
+	public void setOldShape(Shape oldShape) {
+		this.oldShape = oldShape;
+	}
+
+	public int getElementAtPosition(Point point) {
+		for (int i = graphicElements.size() - 1; i >= 0; i--) {
+			SlotDevice element = graphicElements.get(i);
+			if (((SlotView) element.getPaint()).getShape().contains(point)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,19 @@
+package actions;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import view.AboutView;
+
+public class AboutListener implements ActionListener{
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+
+		AboutView.getInstance().setVisible(true);
+		
+	}
+
+	
+	
+}

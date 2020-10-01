@@ -1,0 +1,71 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+public class AboutView extends JDialog{
+
+	private JLabel lbImeIPrezimeIndexClan1;
+	private JLabel lbImeIPrezimeIndexClan2;
+	private JPanel panel1;
+	private JLabel image1;
+	private JLabel image2;
+	private JPanel panel2;
+	private JPanel centerPanel;
+	private GridLayout grid;
+	
+	private static AboutView instance=null;
+	
+	public AboutView() {
+	
+		grid=new GridLayout(3,1);
+		grid.setHgap(20);
+		
+		
+		
+		lbImeIPrezimeIndexClan1=new JLabel("<html>Ime: Anastasija<br/><br/>Prezime: Radonjic<br/><br/>Index: RN68/19</html>");
+		lbImeIPrezimeIndexClan1.setBorder(new EmptyBorder(0, 70, 0, 0));
+		panel1=new JPanel();
+		panel1.add(lbImeIPrezimeIndexClan1);
+		image1=new JLabel(new ImageIcon("images/Anastasija.jpg"));
+		image1.setBorder(new EmptyBorder(0, 70, 0, 0));
+		panel1.setLayout(grid);
+		panel1.add(image1);
+		
+		lbImeIPrezimeIndexClan2=new JLabel("<html>Ime: Dimitrije<br/><br/>Prezime: Jovanovic<br/><br/>Index: RN25/18</html>");
+		lbImeIPrezimeIndexClan2.setBorder(new EmptyBorder(0, 0, 0, 70));
+		panel2=new JPanel();
+		panel2.add(lbImeIPrezimeIndexClan2);
+		image2=new JLabel(new ImageIcon("images/Dimitrije.jpg"));
+		image2.setBorder(new EmptyBorder(0, 0, 0, 70));
+		panel2.setLayout(new GridLayout(3,1));
+		panel2.add(image2);
+		
+		centerPanel=new JPanel();
+		centerPanel.setLayout(new BorderLayout());
+		centerPanel.add(panel1,BorderLayout.WEST);
+		centerPanel.add(panel2,BorderLayout.EAST);
+		add(centerPanel);
+		
+		
+		setSize(500,500);
+		setTitle("About");
+		setLocationRelativeTo(MainFrame.getInstance());
+	}
+
+	public static AboutView getInstance() {
+		if(instance==null) {
+			instance=new AboutView();
+		}
+		return instance;
+	}
+
+	
+	
+	
+}

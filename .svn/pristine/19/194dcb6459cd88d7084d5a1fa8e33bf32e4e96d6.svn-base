@@ -1,0 +1,94 @@
+package commadns;
+
+import java.awt.Dimension;
+import java.awt.Point;
+import java.util.ArrayList;
+
+import events.PageEvent.PageEventType;
+import model.Page;
+import model.elements.SlotDevice;
+
+
+
+public class ResizeCommand extends Command {
+	private Page page;
+	private SlotDevice selectSlot;
+	private ArrayList<SlotDevice> slots = new ArrayList<>();
+	private Dimension oldDim;
+	private Point oldPoint;
+	private ArrayList<Dimension> oldsd = new ArrayList<>();
+	private ArrayList<Point> oldsp = new ArrayList<>();
+	private Dimension newDim;
+	private Point newPoint;
+
+	public ResizeCommand(Page page, SlotDevice selectSlot, ArrayList<SlotDevice> slots,
+			Dimension oldDim, Point oldPoint, ArrayList<Dimension> osd, ArrayList<Point> osp, Dimension newDim, Point newPoint) {
+		super();
+		this.page = page;
+		for (SlotDevice s : page.getSlotDevices()) {
+			if (s.equals(selectSlot)) {
+				this.selectSlot = s;
+				break;
+			}
+		}
+
+		for (SlotDevice ss : slots) {
+			for (SlotDevice sss : page.getSlotDevices()) {
+				if (sss.equals(ss)) {
+					this.slots.add(sss);
+					break;
+				}
+			}
+		}
+		
+		this.oldDim = oldDim;
+		this.oldPoint = oldPoint;
+		for (Dimension dim : osd) {
+			this.oldsd.add(dim);
+		}
+		for (Point p : osp) {
+			this.oldsp.add(p);
+		}
+		this.newDim = newDim;
+		this.newPoint = newPoint;
+	}
+
+	@Override
+	public void doCommand() {
+		selectSlot.setPosition(newPoint);
+		selectSlot.setDimension(newDim);
+		selectSlot.getSlotPainter().draw();
+		for(int i=0; i<slots.size(); i++) {
+			if(slots.get(i)!=selectSlot) {
+				slots.get(i).setDimension(new Dimension(oldsd.get(i).width + newDim.width - oldDim.width,
+						oldsd.get(i).height + newDim.height - oldDim.height));
+				slots.get(i).setPosition(new Point(oldsp.get(i).x+newPoint.x-oldPoint.x,
+						oldsp.get(i).y+newPoint.y-oldPoint.y));
+				slots.get(i).getSlotPainter().draw();
+			}
+		}
+		page.notifyObservers(PageEventType.DRAW);
+	}
+
+	@Override
+	public void undoCommand() {
+		
+		selectSlot.setPosition(oldPoint);
+		selectSlot.setDimension(oldDim);
+		selectSlot.getSlotPainter().draw();
+			
+		for (int i = 0; i < slots.size(); i++) {
+			if (slots.get(i).equals(selectSlot))
+				continue;
+			System.out.println(slots.get(i).getName());
+			slots.get(i).setDimension(oldsd.get(i));
+			System.out.println(oldsd.get(i));
+			slots.get(i).setPosition(oldsp.get(i));
+			System.out.println(oldsp.get(i));
+			slots.get(i).getSlotPainter().draw();
+		}
+		
+		page.notifyObservers(PageEventType.DRAW);
+	}
+
+}

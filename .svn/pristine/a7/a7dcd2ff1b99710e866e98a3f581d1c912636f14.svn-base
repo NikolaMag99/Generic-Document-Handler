@@ -1,0 +1,23 @@
+package view;
+
+import javax.swing.JToolBar;
+
+import actions.ActionManager;
+
+public class Toolbar extends JToolBar{
+
+	public Toolbar() {
+		// TODO Auto-generated constructor stub
+		add(ActionManager.getInstance().getOpenFile());
+		addSeparator();
+		add(ActionManager.getInstance().getAddNode());
+		add(ActionManager.getInstance().getDeleteNode());
+		addSeparator();
+		add(ActionManager.getInstance().getSave());
+		add(ActionManager.getInstance().getSaveas());
+		addSeparator();
+		add(ActionManager.getInstance().getCloseTab());
+		add(ActionManager.getInstance().getCloseAllTab());
+	}
+	
+}

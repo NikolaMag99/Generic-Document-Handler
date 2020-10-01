@@ -1,0 +1,54 @@
+package view;
+
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+
+import javax.swing.JPanel;
+import javax.swing.Scrollable;
+
+
+
+public class DocumentPanel extends JPanel implements Scrollable{
+
+
+	private ArrayList<PageView> pageViews = new ArrayList<PageView>();
+
+	public DocumentPanel() {
+		super();
+
+	}
+
+	public ArrayList<PageView> getPageViews() {
+		return pageViews;
+	}
+
+	//Metode interfejsa Scrollable za podesavanje brzine skrolovanja
+	@Override
+	public Dimension getPreferredScrollableViewportSize() {
+		return null;
+	}
+
+	//skrol tockicem
+	@Override
+	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+		return 50;
+	}
+
+	@Override
+	public boolean getScrollableTracksViewportWidth() {
+		return false;
+	}
+
+	@Override
+	public boolean getScrollableTracksViewportHeight() {
+		return false;
+	}
+
+	@Override
+	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

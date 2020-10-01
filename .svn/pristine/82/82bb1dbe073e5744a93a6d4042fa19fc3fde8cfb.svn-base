@@ -1,0 +1,40 @@
+package menu;
+
+import java.awt.Dimension;
+
+import javax.swing.Box;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+
+
+public class MenuBar extends JMenuBar{
+	
+	private JMenu edit;
+	private JMenu view;
+	private JMenu help;
+	
+	public MenuBar() {
+		dodajKomponente();
+	}
+	
+	private void dodajKomponente() {
+		
+		edit = new JMenu();
+		edit.setText("Edit");
+		
+		view = new JMenu();
+		view.setText("View");
+		
+		help = new JMenu();
+		help.setText("Help");
+		help.setMaximumSize(new Dimension(5, 100));
+		
+		add(new MenuFile());
+		add(edit);
+		add(view);
+		add(Box.createHorizontalGlue());
+		add(help);
+		add(new MenuAbout());
+		
+	}
+}

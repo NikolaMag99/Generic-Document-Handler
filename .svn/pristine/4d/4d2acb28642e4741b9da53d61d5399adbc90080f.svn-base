@@ -1,0 +1,89 @@
+package gui.dialogs;
+
+import java.awt.BorderLayout;
+
+import java.awt.GridLayout;
+
+
+
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import gui.MainFrameGerudok;
+
+@SuppressWarnings("serial")
+public class AboutDialog extends JDialog {
+
+	public AboutDialog(JFrame parent) {
+		super(parent,"Tim 203_17",true);
+		setSize(500,270);
+		
+		
+		setLocationRelativeTo(parent);
+		
+		JLabel lbImeIPrezimeIndexClan1;
+		JLabel lbImeIPrezimeIndexClan2;
+		JPanel panel1;
+		JLabel image1;
+		JLabel image2;
+		JPanel panel2;
+		JPanel centerPanel;
+		
+		
+		GridLayout grid=new GridLayout(3,1);
+		grid.setHgap(30);
+		
+		
+		lbImeIPrezimeIndexClan1=new JLabel("<html>Ime: Nikola<br/><br/>Prezime: Paunovic<br/><br/>Index: RN57/18</html>\"");
+		lbImeIPrezimeIndexClan1.setBorder(new EmptyBorder(0, 70, 0, 0));
+		panel1=new JPanel();
+		panel1.add(lbImeIPrezimeIndexClan1);
+		image1=new JLabel(new ImageIcon("images/nikola1.jpg"));
+		image1.setBorder(new EmptyBorder(0, 70, 0, 0));
+		panel1.setLayout(grid);
+		panel1.add(image1);
+		
+		lbImeIPrezimeIndexClan2=new JLabel("<html>Ime: Anastasija<br/><br/>Prezime: Radonjic<br/><br/>Index: RN68/19</html>");
+		lbImeIPrezimeIndexClan2.setBorder(new EmptyBorder(0, 0, 0, 70));
+		panel2=new JPanel();
+		panel2.add(lbImeIPrezimeIndexClan2);
+		image2=new JLabel(new ImageIcon("images/anastasija1.jpg"));
+		image2.setBorder(new EmptyBorder(0, 0, 0, 70));
+		panel2.setLayout(new GridLayout(3,1));
+		panel2.add(image2);
+		
+		centerPanel=new JPanel();
+		centerPanel.setLayout(new BorderLayout());
+		centerPanel.add(panel1,BorderLayout.WEST);
+		centerPanel.add(panel2,BorderLayout.EAST);
+		add(centerPanel);
+		
+		setSize(500,500);
+		setTitle("About");
+		setLocationRelativeTo(MainFrameGerudok.getInstance());
+		
+//		Box boxNikola = Box.createVerticalBox();
+//		boxNikola.add(lblPodaciNikola);
+//		boxNikola.add(lblNikola);
+		
+		/*
+		JLabel lblPodaciNikola=new JLabel("Nikola Paunovic 57/18RN");
+		ImageIcon imageNikola = new ImageIcon("images/nikola.jpg");
+		Image resizedImageNikola = imageNikola.getImage().getScaledInstance(200,200, 1);
+		JLabel lblNikola=new JLabel(new ImageIcon(resizedImageNikola));
+		lblNikola.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		lblPodaciNikola.setAlignmentX(CENTER_ALIGNMENT);
+		Box boxNikola = Box.createVerticalBox();
+		boxNikola.add(lblPodaciNikola);
+		boxNikola.add(lblNikola);
+		
+		add(boxNikola);
+	*/
+//		add(boxNikola);
+		setLocationRelativeTo(parent);
+	}
+}

@@ -1,0 +1,94 @@
+package commadns;
+
+import java.awt.Dimension;
+import java.awt.Point;
+import java.util.ArrayList;
+
+import events.PageEvent.PageEventType;
+import model.Page;
+import model.elements.SlotDevice;
+
+public class ResizeCommand extends Command {
+	private Page page;
+	private SlotDevice selectSlot;
+	private ArrayList<SlotDevice> slots = new ArrayList<>();
+	private Dimension oldDimension;
+	private Point oldPoint;
+	private ArrayList<Dimension> oldArrayDim = new ArrayList<>();
+	private ArrayList<Point> oldArrayPoint = new ArrayList<>();
+	private Dimension newDim;
+	private Point newPoint;
+
+	public ResizeCommand(Page page, SlotDevice selectSlot, ArrayList<SlotDevice> slots, Dimension oldDimension,
+			Point oldPoint, ArrayList<Dimension> oldArrayD, ArrayList<Point> oldArrayP, Dimension newDim,
+			Point newPoint) {
+		super();
+		this.page = page;
+		for (SlotDevice s : page.getSlotDevices()) {
+			if (s.equals(selectSlot)) {
+				this.selectSlot = s;
+				break;
+			}
+		}
+
+		for (SlotDevice slot : slots) {
+			for (SlotDevice sd : page.getSlotDevices()) {
+				if (sd.equals(slot)) {
+					this.slots.add(sd);
+					break;
+				}
+			}
+		}
+
+		this.oldDimension = oldDimension;
+		this.oldPoint = oldPoint;
+		for (Dimension dim : oldArrayD) {
+			this.oldArrayDim.add(dim);
+		}
+		for (Point p : oldArrayP) {
+			this.oldArrayPoint.add(p);
+		}
+		this.newDim = newDim;
+		this.newPoint = newPoint;
+	}
+
+
+	@Override
+	public void undoCommand() {
+		
+		selectSlot.setDimension(oldDimension);
+		selectSlot.setPosition(oldPoint);
+		selectSlot.getSlotPainter().draw();
+
+		for (int i = 0; i < slots.size(); i++) {
+			if (slots.get(i).equals(selectSlot))
+				continue;
+			System.out.println(slots.get(i).getName());
+			slots.get(i).setDimension(oldArrayDim.get(i));
+			System.out.println(oldArrayDim.get(i));
+			slots.get(i).setPosition(oldArrayPoint.get(i));
+			System.out.println(oldArrayPoint.get(i));
+			slots.get(i).getSlotPainter().draw();
+		}
+
+		page.notifyObservers(PageEventType.DRAW);
+	}
+	
+	@Override
+	public void doCommand() {
+		selectSlot.setDimension(newDim);
+		selectSlot.setPosition(newPoint);
+		selectSlot.getSlotPainter().draw();
+		for (int i = 0; i < slots.size(); i++) {
+			if (slots.get(i) != selectSlot) {
+				slots.get(i).setDimension(new Dimension(oldArrayDim.get(i).width + newDim.width - oldDimension.width,
+						oldArrayDim.get(i).height + newDim.height - oldDimension.height));
+				slots.get(i).setPosition(new Point(oldArrayPoint.get(i).x + newPoint.x - oldPoint.x,
+						oldArrayPoint.get(i).y + newPoint.y - oldPoint.y));
+				slots.get(i).getSlotPainter().draw();
+			}
+		}
+		page.notifyObservers(PageEventType.DRAW);
+	}
+
+}

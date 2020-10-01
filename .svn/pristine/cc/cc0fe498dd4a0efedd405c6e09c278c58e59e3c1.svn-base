@@ -1,0 +1,29 @@
+package actions;
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrameGerudok;
+
+public class CircleAction extends AbstractActionIcon{
+	
+ public CircleAction(Dimension d) {
+	
+	 
+		putValue(SMALL_ICON, iconGetter("/slotToolBar/circle.jpg", d));
+		putValue(NAME, ("Circle"));
+		putValue(SHORT_DESCRIPTION, ("Circle"));
+	
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		MainFrameGerudok.getInstance().getSlotToolBar().getStateManager().setCircleState();
+		
+	}
+
+}

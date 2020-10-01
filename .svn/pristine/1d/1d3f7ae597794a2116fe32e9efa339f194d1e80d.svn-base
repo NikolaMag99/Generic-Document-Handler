@@ -1,0 +1,66 @@
+package actions;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+
+import model.MyTreeNode;
+import view.MainFrame;
+
+
+public class AddNode extends AbstractActions{
+	
+	
+	public AddNode() {
+		// TODO Auto-generated constructor stub
+		
+		putValue(ACCELERATOR_KEY,KeyStroke.getKeyStroke(
+		        KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+		putValue(SMALL_ICON, loadIcon("images/plus.png"));
+		putValue(NAME, "New project");
+		putValue(SHORT_DESCRIPTION, "New project");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+		MyTreeNode selected=(MyTreeNode)MainFrame.getInstance().getTree().getLastSelectedPathComponent();
+		MyTreeNode tmp=selected;
+		int broj=0;
+		if(selected!=null) {
+		while(tmp.getParent()!=null)
+		{
+			broj++;
+			tmp=tmp.getParent();
+		}
+		String imeNoda = "";
+		if(broj<3) { 
+			if(broj==0)
+				imeNoda = "Project ";
+			if(broj==1)
+				imeNoda = "Document ";
+			if(broj==2)
+				imeNoda = "Page ";
+				
+		}
+		
+		imeNoda += selected.getChildCount();
+		
+		MyTreeNode newNode = new MyTreeNode(imeNoda);
+		
+		//newNode.register(MainFrame.getInstance().getTabPane());
+		
+		//selected.addNode(newNode);
+		SwingUtilities.updateComponentTreeUI(MainFrame.getInstance().getTree());
+		}
+	
+		
+	}
+
+	
+	
+}

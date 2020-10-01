@@ -1,0 +1,85 @@
+package state;
+
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
+
+import javax.swing.text.Document;
+
+import model.Page;
+import model.Project;
+import model.Workspace;
+import model.elements.SlotDevice;
+import view.PageView;
+
+public class MoveState  extends State {
+
+	private PageView page;
+
+	private Point2D startingPoint=null;
+	public MoveState(PageView pageView) {
+		this.page=pageView;
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		for (SlotDevice slotDevice : page.getPage().getSlotDevices()) {
+			if(slotDevice.getSlotPainter().getShape().contains(e.getPoint())) {
+				startingPoint=e.getPoint();
+				return;
+			}
+			
+		}
+		if(startingPoint==null)
+			page.startSelectState();
+		
+		
+	}
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		if(startingPoint==null) {
+			for (SlotDevice slotDevice :page.getPage().getSelectedSlots()) {
+				if(slotDevice.getSlotPainter().getShape().contains(e.getPoint())) {
+					startingPoint = e.getPoint();
+                    return;
+				}
+				
+			}
+			return;
+		}
+		
+		
+		  Point currPoint = e.getPoint();
+	        Dimension change = new Dimension((int)(currPoint.getX() - startingPoint.getX()),
+	                (int)(currPoint.getY() - startingPoint.getY()));
+	        
+	        for (SlotDevice slot : page.getPage().getSelectedSlots()) {
+	        	if(slot!=page.getPage().getSelectSlot()) {
+	        		Point position = slot.getPosition();
+	                Point currPosition = new Point((int) position.getX() + change.width, (int) position.getY() + change.height);
+	                System.out.println("stara pozicija"+slot.getName()+position.x+ " "+position.y+"nova pozicija"+ currPosition.x+" "+currPosition.y);
+	                slot.setPosition(currPosition);
+	        	}
+	        		
+	        	
+				
+			}
+	        for(SlotDevice slot:page.getPage().getSelectedSlots())
+	        	slot.getSlotPainter().draw();
+	        startingPoint = currPoint;
+	        page.repaint();
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		page.repaint();
+	     startingPoint = null;
+	     page.startSelectState();
+		
+	}
+	@Override
+	public void mouseMoved(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+}

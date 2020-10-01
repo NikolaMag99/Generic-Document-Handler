@@ -1,0 +1,53 @@
+package state;
+
+import model.Page;
+import model.elements.TriangleElement;
+import view.PageView;
+
+import java.awt.*;
+import java.awt.event.MouseEvent;
+
+import commadns.AddCommand;
+
+public class TriangleState extends State {
+
+	private PageView page;
+
+	public TriangleState(PageView pageView) {
+		this.page = pageView;
+	}
+
+	@Override
+	public void mousePressed(MouseEvent event) {
+
+		if (event.getButton() == MouseEvent.BUTTON1) {
+			Point pos = event.getPoint();
+			Paint fill = new Color(0, 35, 255);
+
+			TriangleElement triangleElement = new TriangleElement(fill, new BasicStroke(2f),"tri " + page.getPage().getSlotDevices().size(), new Dimension(60, 60), pos,
+					0);
+
+			page.getPage().getCommandManager().addCommand(new AddCommand(page.getPage(), triangleElement));
+		}
+
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

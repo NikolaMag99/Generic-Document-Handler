@@ -1,0 +1,36 @@
+package gui.segments;
+
+import actions.manager.ActionManager;
+
+import javax.swing.JToolBar;
+
+
+public class ToolBarGerudok extends JToolBar {
+
+	public ToolBarGerudok() {
+		super(JToolBar.HORIZONTAL);
+		setFloatable(false);
+		
+		add(ActionManager.getInstance().getNewproject());
+
+		add(ActionManager.getInstance().getNewdocument());
+
+		add(ActionManager.getInstance().getNewpage());
+		
+		add(ActionManager.getInstance().getDeletenode());
+		
+		add(ActionManager.getInstance().getRenamenode());
+		
+		addSeparator();
+
+		add(ActionManager.getInstance().getOpenproject());
+
+		add(ActionManager.getInstance().getSaveas());
+		
+
+		addSeparator();
+
+		add(ActionManager.getInstance().getAbout());
+		
+	}
+}

@@ -1,0 +1,50 @@
+package actions;
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrameGerudok;
+import model.Document;
+import model.Project;
+import view.ProjectView;
+import view.WorkspaceView;
+
+public class CloseAction extends AbstractActionIcon {
+	
+	public CloseAction(Dimension d) {
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+		putValue(SMALL_ICON, iconGetter("/menu/deleteAll.png", d));
+		putValue(NAME, ("Close"));
+		putValue(SHORT_DESCRIPTION, ("Close"));
+		setEnabled(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object selectedComponent = MainFrameGerudok.getInstance().getTree().getLastSelectedPathComponent();
+
+        if (selectedComponent instanceof Document) {
+            Document document = (Document) selectedComponent;
+            Project project=(Project)document.getParent();
+            ProjectView projectView = MainFrameGerudok.getInstance().getWorkspaceView().getProjView();
+            JTabbedPane pane = projectView.getTabbedPane();
+            int tabIdx = pane.getSelectedIndex();
+            
+            if (tabIdx != 1) {
+            	projectView.remove(tabIdx);
+            }
+//            ProjectView projectView = MainFrameGerudok.getInstance().getWorkspaceView().getProjView(project);
+//            int tabIndex=projectView.getSelectedIndex();
+//            if(tabIndex !=1)
+//            	projectView.remove(tabIndex);
+        }
+		
+	}
+
+}

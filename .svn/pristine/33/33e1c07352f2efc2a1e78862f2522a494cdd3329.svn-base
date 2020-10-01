@@ -1,0 +1,30 @@
+package actions;
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+
+import javax.swing.JTree;
+import javax.swing.tree.TreePath;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrameGerudok;
+import model.Page;
+import state.StateManager;
+
+public class RectangleAction extends AbstractActionIcon {
+	
+	public RectangleAction(Dimension d) {
+		
+		 
+		putValue(SMALL_ICON, iconGetter("/slotToolBar/rectangle.jpg", d));
+		putValue(NAME, ("Rectangle"));
+		putValue(SHORT_DESCRIPTION, ("Rectangle"));
+	
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		MainFrameGerudok.getInstance().getSlotToolBar().getStateManager().setRectangleState();
+	}
+
+}

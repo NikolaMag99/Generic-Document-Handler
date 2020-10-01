@@ -1,0 +1,14 @@
+package factory;
+
+import javax.swing.tree.MutableTreeNode;
+
+import model.Document;
+
+public class DocumentFactory extends NodeFactory{
+
+	@Override
+	public MutableTreeNode createNode() {
+		return new Document(null, "");
+	}
+
+}

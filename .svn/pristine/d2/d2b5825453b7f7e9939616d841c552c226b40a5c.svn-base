@@ -1,0 +1,84 @@
+package tree.view;
+
+import model.Document;
+import model.Page;
+import model.Project;
+import model.Slot;
+import view.DocumentView;
+
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.EventObject;
+
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeCellEditor;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellEditor;
+
+public class TreeEditor extends DefaultTreeCellEditor implements ActionListener, TreeCellEditor {
+
+	private Object stavka = null;
+	private JTextField edit = null;
+
+	public TreeEditor(JTree arg0, DefaultTreeCellRenderer arg1) {
+		super(arg0, arg1);
+	}
+
+	public Component getTreeCellEditorComponent(JTree arg0, Object arg1, boolean arg2, boolean arg3, boolean arg4,
+												int arg5) {
+
+		stavka = arg1;
+
+		edit = new JTextField(arg1.toString());
+		edit.addActionListener(this);
+		return edit;
+	}
+
+	public boolean isCellEditable(EventObject arg0) {
+		if (arg0 instanceof MouseEvent) {
+			if (((MouseEvent) arg0).getClickCount() == 3) {
+				return true;
+			}
+			return false;
+		}
+		return true;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		String newName = e.getActionCommand();
+
+		if (stavka instanceof Project) {
+			Project project = (Project) stavka;
+
+			project.setName(newName);
+
+		}
+		if (stavka instanceof Document) {
+			Document document = (Document) stavka;
+
+			document.setName(newName);
+		}
+		if (stavka instanceof Page) {
+			Page page = (Page) stavka;
+
+			page.setName(newName);
+
+		}
+		if (stavka instanceof Slot) {
+			Slot slot = (Slot) stavka;
+
+			slot.setName(newName);
+		}
+
+		try {
+			tree.stopEditing();
+			tree.setInvokesStopCellEditing(true);
+		} catch (Exception e1) {
+		}
+	}
+}

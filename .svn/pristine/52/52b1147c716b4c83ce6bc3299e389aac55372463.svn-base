@@ -1,0 +1,31 @@
+package state;
+
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.io.Serializable;
+
+import enums.Handle;
+
+public abstract class State  implements Serializable {
+	
+	protected Graphics grafika = null;
+	protected Handle handle;
+	
+	public abstract void mousePressed(MouseEvent e);
+	public abstract void mouseDragged(MouseEvent e);
+	public abstract void mouseReleased(MouseEvent e);
+	
+	public Graphics getGrafika() {
+		return grafika;
+	}
+	public void setGrafika(Graphics grafika) {
+		this.grafika = grafika;
+	}
+	public Handle getHandle() {
+		return handle;
+	}
+	public void setHandle(Handle handle) {
+		this.handle = handle;
+	}
+
+}

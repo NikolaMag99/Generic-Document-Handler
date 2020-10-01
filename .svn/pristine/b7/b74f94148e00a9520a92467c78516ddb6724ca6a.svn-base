@@ -1,0 +1,65 @@
+package state;
+
+import java.awt.Point;
+import java.awt.Shape;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+
+import model.Page;
+import model.elements.SlotDevice;
+
+public class RotateState extends State {
+	
+	private Page page;
+	private Point mousePoint;
+	private Point slotCenter;
+
+	public RotateState(Page page) {
+		super();
+		this.page = page;
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		SlotDevice selectedSlot=null;
+		for(SlotDevice slotDevice:page.getSlotDevices()) {
+			if(slotDevice.getSlotPainter().elementAt(e.getPoint())) {
+				page.setSelectSlot(slotDevice);
+				return;
+			}
+		}
+		page.setSelectSlot(null);
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		Point pos = e.getPoint();
+		if (page.getSelectSlot() != null) {
+			Point centar = new Point(page.getSelectSlot().getPosition().x + page.getSelectSlot().getDimension().width/2,
+					page.getSelectSlot().getPosition().y+page.getSelectSlot().getDimension().height/2);
+			Shape slotShape = page.getSelectSlot().getSlotPainter().getOldShape();
+			double ugao = ugao(centar, pos);
+			System.out.println(ugao);
+			AffineTransform af = AffineTransform.getRotateInstance(ugao, centar.x, centar.y);
+			
+			page.getSelectSlot().setAngle(ugao);
+			page.getSelectSlot().getSlotPainter().setShape(af.createTransformedShape(slotShape));
+
+		}
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private double ugao(Point slotCenter, Point mousePoint) {
+		double ug = 0.0;		
+		ug = Math.atan2(mousePoint.y-slotCenter.y, mousePoint.x-slotCenter.x);
+		return ug;
+	}
+
+}

@@ -1,0 +1,36 @@
+package actions;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+
+import model.MyTreeNode;
+import view.MainFrame;
+
+public class OpenFile extends AbstractActions{
+
+	public OpenFile() {
+		// TODO Auto-generated constructor stub
+		putValue(ACCELERATOR_KEY,KeyStroke.getKeyStroke(
+		        KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+		putValue(SMALL_ICON, loadIcon("images/add-file.png"));
+		putValue(NAME, "Open file");
+		putValue(SHORT_DESCRIPTION, "Open file");
+	}
+
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+
+		MyTreeNode selectedNode = (MyTreeNode) MainFrame.getInstance().getTree().getLastSelectedPathComponent();
+		
+		SwingUtilities.updateComponentTreeUI(MainFrame.getInstance().getTree());
+		
+	}
+	
+	
+
+}

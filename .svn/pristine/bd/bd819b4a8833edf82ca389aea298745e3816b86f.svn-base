@@ -1,0 +1,22 @@
+package menu;
+
+import javax.swing.JMenu;
+
+import actions.ActionManager;
+
+
+public class MenuFile extends JMenu {
+	
+	public MenuFile() {
+		setText("File");
+		add(ActionManager.getInstance().getOpenFile());
+		addSeparator();
+		add(ActionManager.getInstance().getAddNode());
+		add(ActionManager.getInstance().getDeleteNode());
+		addSeparator();
+		add(ActionManager.getInstance().getSave());
+		add(ActionManager.getInstance().getSaveas());
+	}
+
+}
+

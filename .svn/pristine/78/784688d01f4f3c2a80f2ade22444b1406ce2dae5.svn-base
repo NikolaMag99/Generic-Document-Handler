@@ -1,0 +1,137 @@
+package view;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
+
+import events.PageEvent;
+import events.PageEvent.PageEventType;
+import gui.MainFrame;
+import model.Page;
+import model.elements.CircleElement;
+import model.elements.RectangleElement;
+import model.elements.SlotDevice;
+import model.elements.TriangleElement;
+
+
+public class PageView2 extends JPanel implements Observer {
+	
+	
+	private Page page;
+	private JLabel lblName;
+	private String name;
+	private DocumentView documentView;
+	
+
+	public PageView2(DocumentView documentView, Page page) {
+		super();
+		this.page = page;
+		this.documentView = documentView;
+		this.name = page.getName();
+		page.addObserver(this);
+		setAlignmentY(CENTER_ALIGNMENT);
+		setAlignmentX(CENTER_ALIGNMENT);
+		setMaximumSize(new Dimension(200,150));
+		setBackground(Color.WHITE);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		lblName = new JLabel(page.getName());
+		add(lblName);
+		revalidate();
+		addMouseListener(new MouseClickController(this));
+	}
+
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if (arg == null)
+			return;
+
+		PageEvent eventObject =  (PageEvent) arg;
+
+		if (eventObject.getType() == PageEventType.RENAME_PAGE) {
+			this.name = page.getName();
+			this.setName(name);
+
+		} else if (eventObject.getType() == PageEventType.DRAW) {
+			repaint();
+
+		}
+		MainFrame.getInstance().repaint();
+		MainFrame.getInstance().revalidate();
+		SwingUtilities.updateComponentTreeUI(MainFrame.getInstance().getTree());
+		
+	}
+	
+	private void writeContent() {
+		this.removeAll();
+		lblName = new JLabel(page.getName());
+		add(lblName);
+		int cCount = 0;
+		int rCount = 0;
+		int tCount = 0;
+		for(SlotDevice sd : page.getSlotDevices()) {
+			if (sd instanceof CircleElement)
+				cCount++;
+			if (sd instanceof TriangleElement)
+				tCount++;
+			if (sd instanceof RectangleElement)
+				rCount++;
+		}
+		if (cCount != 0) {
+			JLabel lblCircle = new JLabel(cCount + " circles");
+			add(lblCircle);
+		}
+		if (rCount != 0) {
+			JLabel lblRectangle = new JLabel(rCount + " rectangles");
+			add(lblRectangle);
+		}
+		if (tCount != 0) {
+			JLabel lblTriangle = new JLabel(tCount + " triangles");
+			add(lblTriangle);
+		}
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+		TitledBorder border = BorderFactory.createTitledBorder(name);
+		border.setTitleColor(Color.BLACK);
+		setBorder(border);
+	}
+	
+	public Page getPage() {
+		return page;
+	}
+	
+	public void setPage(Page page) {
+		this.page = page;
+	}
+	
+private class MouseClickController extends MouseAdapter {
+		
+		private PageView2 p;
+		
+		public MouseClickController(PageView2 ptw) {
+			p = ptw;
+		}
+		
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			documentView.focusByThumbnail(p);
+		}
+	}
+
+}

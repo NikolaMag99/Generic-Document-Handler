@@ -1,0 +1,90 @@
+package gui;
+
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
+
+public class NewWindowListener implements WindowListener {
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		JFrame frame = (JFrame)e.getComponent();
+		
+		
+		int code = JOptionPane.showConfirmDialog(frame, "Da li zelite da otvorite stari Workspace?","Otvaranje",JOptionPane.YES_NO_OPTION);
+		if(MainFrame.getInstance().getWorkspaceFile().exists()) {
+			if(MainFrame.getInstance().openWorkspaceContext().getProjects().size() == 0) {
+				return;
+			}
+		if (code == JOptionPane.YES_OPTION) {
+			
+			
+			//MainFrame.getInstance().getActionManager().getSaveWsAction().setWorkspaceCont(true);
+			MainFrame.getInstance().getActionManager().getSaveas().actionPerformed(null);
+			frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+				}
+		}
+		else if (code == JOptionPane.NO_OPTION){
+			frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		}
+		
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+			JFrame frame = (JFrame)e.getComponent();
+		
+		
+		int code = JOptionPane.showConfirmDialog(frame, "Da li zelite da prvo sacuvate vas Workspace?","Zatvaranje",JOptionPane.YES_NO_CANCEL_OPTION);
+		
+		if (code == JOptionPane.YES_OPTION) {
+			//MainFrame.getInstance().getActionManager().getSaveWsAction().saveWorkspace(new File("ws/uhvati.grws"), MainFrame.getInstance().getWs());
+			MainFrame.getInstance().getActionManager().getSaveas().actionPerformed(null);
+			frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		}
+		
+		else if (code == JOptionPane.NO_OPTION){
+			frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		}
+		
+		else {
+			frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		}
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

@@ -1,0 +1,78 @@
+package model.elements;
+
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.swing.DefaultSingleSelectionModel;
+
+public class SelectionModel extends DefaultSingleSelectionModel {
+	
+	/*
+	
+	private ArrayList<Slot> selectionList = new ArrayList<Slot>();
+	
+	
+	public void addToSelectionList(Slot element) {
+		selectionList.add(element);
+	}
+
+	public void addToSelectionList(ArrayList<Slot> list) {
+		selectionList.addAll(list);
+	}
+
+	public int getSelectionListSize() {
+		return selectionList.size();
+	}
+
+	public Slot getElementFromSelectionListAt(int index) {
+		return selectionList.get(index);
+	}
+
+	public int getIndexByObject(Slot element) {
+		return selectionList.indexOf(element);
+	}
+
+	public void removeFromSelectionList(Slot element) {
+		selectionList.remove(element);
+	}
+
+	public void removeAllFromSelectionList() {
+		selectionList.clear();
+	}
+
+	public ArrayList<Slot> getSelectionList() {
+		return selectionList;
+	}
+
+	public Iterator<Slot> getSelectionListIterator() {
+		return selectionList.iterator();
+	}
+
+	
+	public boolean isElementSelected(Slot element) {
+		return selectionList.contains(element);
+	}
+	
+	public void selectElements(Rectangle2D rec, ArrayList<Slot> elements) {
+		Iterator<Slot> it = elements.iterator();
+		while (it.hasNext()) {
+			Slot element = it.next();
+
+			if (rec.intersects((Rectangle2D) element.getPaint())) {
+				if (!isElementSelected(element))
+					selectionList.add(element);
+			}
+		}
+	}
+	
+	public ArrayList<Slot> getSelected() {
+		ArrayList<Slot> selected=new ArrayList<Slot>();
+		selected.addAll(selectionList);
+		
+		return selected;
+	}
+	*/
+	
+
+}

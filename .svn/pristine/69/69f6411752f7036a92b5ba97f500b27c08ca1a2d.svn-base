@@ -1,0 +1,21 @@
+package app;
+
+import javax.swing.UIManager;
+
+import view.MainFrame;
+
+public class Main {
+	
+	
+	public static void main(String[] args) {
+		MainFrame view = MainFrame.getInstance();
+		view.setVisible(true);
+		
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+	}
+
+}

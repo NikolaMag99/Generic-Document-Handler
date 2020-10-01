@@ -1,0 +1,61 @@
+package state;
+
+import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+
+import model.elements.SlotDevice;
+import view.PageView;
+
+public class SelectState extends State {
+
+	private PageView page;
+	Rectangle2D rect=new Rectangle2D.Double();
+
+	public SelectState(PageView pageView) {
+		this.page = pageView;
+	}
+
+	@Override
+	public void mousePressed(MouseEvent event) {
+		SlotDevice element = page.getPage().getSelectSlot();
+		for (SlotDevice slotDevice : page.getPage().getSlotDevices()) {
+			if (slotDevice.getSlotPainter().elementAt(event.getPoint()) && event.isShiftDown()) {
+				
+				page.getPage().setSelectSlot(element);
+				
+				page.getPage().getSelectedSlots().add(element);
+				
+				
+				return;
+			} else if (slotDevice.getSlotPainter().elementAt(event.getPoint())) {
+				page.getPage().setSelectSlot(slotDevice);
+
+				page.getPage().getSelectedSlots().add(slotDevice);
+				return;
+			}
+
+		}
+		page.getPage().setSelectSlot(element);
+		page.getPage().getSelectedSlots().clear();
+		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent event) {
+	
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent event) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent event) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -1,0 +1,38 @@
+package actions;
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+
+import javax.swing.JTree;
+import javax.swing.tree.TreePath;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrameGerudok;
+import model.Page;
+import state.StateManager;
+
+public class RectangleAction extends AbstractActionIcon {
+	
+	public RectangleAction(Dimension d) {
+		
+		 
+		putValue(SMALL_ICON, iconGetter("/slotToolBar/rectangle.jpg", d));
+		putValue(NAME, ("Rectangle"));
+		putValue(SHORT_DESCRIPTION, ("Rectangle"));
+		setEnabled(false);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JTree tree = MainFrameGerudok.getInstance().getTree();
+		Object selectedComponent = tree.getLastSelectedPathComponent();
+		TreePath path = tree.getSelectionPath();
+		if (selectedComponent instanceof Page) {
+			tree.expandPath(path);
+			Page page = (Page) selectedComponent;
+		//	SlotDevice slot = new SlotDevice(page);
+			//page.addSlotDevice(slot);
+		}
+	}
+
+}

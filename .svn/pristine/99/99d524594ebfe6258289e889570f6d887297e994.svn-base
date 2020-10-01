@@ -1,0 +1,75 @@
+package actions;
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
+import javax.swing.tree.TreePath;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrame;
+import model.Project;
+import model.Workspace;
+
+public class ImportWorkspaceAction extends AbstractActionIcon{
+
+	public ImportWorkspaceAction(Dimension d) {
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+		putValue(MNEMONIC_KEY, KeyEvent.VK_P);
+		putValue(NAME, ("Import"));
+		putValue(SHORT_DESCRIPTION, ("Import"));
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		JFileChooser jfc = new JFileChooser();
+		jfc.setDialogTitle("Select workspace folder to open");//rb
+		jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+		int choosen = jfc.showOpenDialog(MainFrame.getInstance());
+		if (choosen != JFileChooser.APPROVE_OPTION) {
+			return;
+		}
+
+		File workspaceFolder = jfc.getSelectedFile();
+
+		File workspaceFile = null;
+		for (File file : workspaceFile.listFiles()) {
+			if (file.getName().endsWith(".grws")) {
+				workspaceFile = file;
+				break;
+			}
+		}
+		if (workspaceFile == null) {
+			JOptionPane.showMessageDialog(MainFrame.getInstance(), "Selected folder is not Gerudok workspace.",
+					"Open workspace error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		JTree tree = MainFrame.getInstance().getTree();
+		Object selectedComponent = tree.getLastSelectedPathComponent();
+		if (selectedComponent instanceof Workspace) {	
+		Workspace workspace = new Workspace();
+		workspace.getName();
+		workspace.setWorkSpaceFile(workspaceFile);
+		for (Project proj : workspace.getProjects()) {
+			proj.setParent(workspace);
+			proj.addObserver(proj);
+			workspace.addProject(proj);
+		}
+
+		JTree tree2 = MainFrame.getInstance().getTree();
+		TreePath path = tree2.getSelectionPath();
+		tree2.expandPath(path);
+
+		((Workspace) tree2.getModel().getRoot()).setWorkSpaceFile(workspaceFolder);
+		}
+	}
+	
+}

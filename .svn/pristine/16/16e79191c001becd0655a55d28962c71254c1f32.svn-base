@@ -1,0 +1,188 @@
+package view;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+
+import events.PageEvent;
+import events.PageEvent.PageEventType;
+import gui.MainFrameGerudok;
+import model.Page;
+import model.elements.Slot;
+import model.elements.SlotDevice;
+import view.painters.SlotView;
+
+
+
+public class PageView extends JPanel implements FocusListener, Observer {
+
+
+	public static final int PAGE_HEIGHT = 400;
+	public static final int PAGE_WIDTH = 300;
+	
+	
+	DocumentView docView;
+	Page page;
+	String name = null;
+	ArrayList<SlotView> slotViews = new ArrayList<SlotView>();
+	private PageView pw;
+
+	public PageView(Page page) {
+
+		this.page = page;
+		this.name = page.getName();
+		setPreferredSize(new Dimension(PAGE_WIDTH, PAGE_HEIGHT));
+		TitledBorder border = BorderFactory.createTitledBorder(name);
+		border.setTitleColor(Color.BLACK);
+		setBorder(border);
+		addFocusListener(this);
+		this.page.addObserver(this);
+		
+		
+		
+		
+	
+
+		addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				DefaultTreeModel m = (DefaultTreeModel) MainFrameGerudok.getInstance().getTree().getModel();
+				TreeNode[] n = m.getPathToRoot(page);
+
+				//Zameni u putanji projekat
+				n[1] = getDocumentView().getProjectView().getProject();
+
+				MainFrameGerudok.getInstance().getTree().scrollPathToVisible(new TreePath(n));
+				MainFrameGerudok.getInstance().getTree().setSelectionPath(new TreePath(n));
+				SwingUtilities.updateComponentTreeUI(MainFrameGerudok.getInstance().getTree());
+				
+				MainFrameGerudok.getInstance().getSlotToolBar().getStateManager().getState().mousePressed(e);
+				System.out.println("Click");
+			}
+		});
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+
+		super.paintComponent(g);
+		Graphics2D g2=(Graphics2D)g;
+		for(SlotDevice sl:page.getSlotDevices()) {
+			SlotView slPainter=sl.getSlotPainter();
+			slPainter.paint(sl, g2);
+		}
+	}
+
+	public DocumentView getDocumentView(){
+		return (DocumentView) getParent().getParent().getParent();
+	}
+
+	public ArrayList<SlotView> getSlotViews() {
+		return slotViews;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+		TitledBorder border = BorderFactory.createTitledBorder(name);
+		border.setTitleColor(Color.BLUE);
+		setBorder(border);
+	}
+
+	public Page getPage() {
+		return page;
+	}
+
+	public void addSlotView(SlotView view) {
+		slotViews.add(view);
+		add(view, "wrap");
+		validate();
+
+	}
+
+	public void removeSlotView(SlotView view) {
+		slotViews.remove(view);
+		remove(view);
+		validate();
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		TitledBorder border = BorderFactory.createTitledBorder(name);
+		border.setTitleColor(Color.BLUE);
+		setBorder(border);
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		TitledBorder border = BorderFactory.createTitledBorder(name);
+		border.setTitleColor(Color.BLACK);
+		setBorder(border);
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if (arg == null)
+			return;
+
+		PageEvent eventObject = (PageEvent) arg;
+		Slot slot = eventObject.getSlot();
+
+		 if (eventObject.getType() == PageEventType.RENAME_PAGE) {
+			this.name = page.getName();
+			this.setName(name);
+
+		}
+		 else if (eventObject.getType() == PageEventType.DRAW) {
+			 	repaint();
+
+			}
+		 MainFrameGerudok.getInstance().repaint();
+		 MainFrameGerudok.getInstance().revalidate();
+		SwingUtilities.updateComponentTreeUI(MainFrameGerudok.getInstance().getTree());
+	}
+}

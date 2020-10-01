@@ -1,0 +1,18 @@
+package model.elements;
+
+import java.awt.Dimension;
+import java.awt.Paint;
+import java.awt.Point;
+import java.awt.Stroke;
+
+import view.painters.TrianglePainter;
+
+public class TriangleElement extends SlotDevice {
+
+	public TriangleElement(Paint paint, Stroke stroke, String name, Dimension dimension, Point position, double angle) {
+		super(paint, stroke,name, dimension, position, angle);
+		slotPainter = new TrianglePainter(this);
+
+	}
+
+}

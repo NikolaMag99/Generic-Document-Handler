@@ -1,0 +1,23 @@
+package view.painters;
+
+import java.awt.geom.GeneralPath;
+
+import model.elements.Slot;
+import model.elements.TriangleElement;
+
+public class TrianglePainter extends Painter {
+
+	public TrianglePainter(Slot slotElement) {
+		super(slotElement);
+		
+		TriangleElement trigEl = (TriangleElement)slotElement;
+		shape = new GeneralPath();
+
+		((GeneralPath)shape).moveTo(trigEl.getPosition().x, trigEl.getPosition().y);
+		((GeneralPath)shape).lineTo(trigEl.getPosition().x + trigEl.getDimension().width, trigEl.getPosition().y);
+		((GeneralPath)shape).lineTo(trigEl.getPosition().x + trigEl.getDimension().width / 2, trigEl.getPosition().y - trigEl.getDimension().height);
+		((GeneralPath)shape).closePath();
+	
+	}
+
+}

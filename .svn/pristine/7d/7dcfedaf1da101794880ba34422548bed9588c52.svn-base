@@ -1,0 +1,22 @@
+package actions;
+
+import java.awt.event.ActionEvent;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrame;
+import view.DocumentView;
+
+public class RotateAction extends AbstractActionIcon {
+
+	public RotateAction() {
+		putValue(NAME, "Rotate");
+		putValue(SHORT_DESCRIPTION, "Rotate an object");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		((DocumentView) MainFrame.getInstance().getWorkspaceView().getProjView().getTabbedPane().getSelectedComponent())
+				.getFocusPage().startRotateState();
+	}
+
+}

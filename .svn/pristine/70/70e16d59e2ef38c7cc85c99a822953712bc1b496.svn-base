@@ -1,0 +1,39 @@
+package view.painters;
+
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+
+import model.elements.Slot;
+import model.elements.TriangleElement;
+
+public class TrianglePainter extends Painter {
+	
+	private TriangleElement trougao;
+
+	public TrianglePainter(Slot slotElement) {
+		super(slotElement);
+		
+		 trougao = (TriangleElement)slotElement;
+		 Draw();
+	}
+	
+	@Override
+	public void Draw() {
+		shape = new GeneralPath();
+
+		((GeneralPath)shape).moveTo(trougao.getPosition().x, trougao.getPosition().y);
+		((GeneralPath)shape).lineTo(trougao.getPosition().x + trougao.getDimension().width, trougao.getPosition().y);
+		((GeneralPath)shape).lineTo(trougao.getPosition().x + trougao.getDimension().width / 2, trougao.getPosition().y - trougao.getDimension().height);
+		((GeneralPath)shape).closePath();
+		
+		oldShape = shape;
+		
+		Point figCenter = new Point(trougao.getPosition().x + trougao.getDimension().width/2,
+				trougao.getPosition().y+trougao.getDimension().height/2);
+		AffineTransform af = AffineTransform.getRotateInstance(trougao.getAngle(), figCenter.x, figCenter.y);
+		shape = af.createTransformedShape(shape);
+		
+	}
+
+}

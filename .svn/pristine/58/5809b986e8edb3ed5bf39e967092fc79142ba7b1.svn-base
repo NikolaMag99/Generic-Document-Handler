@@ -1,0 +1,19 @@
+package actions;
+
+import java.awt.event.ActionEvent;
+
+import actions.manager.AbstractActionIcon;
+
+public class ShareDocumentsAction extends AbstractActionIcon {
+
+	public ShareDocumentsAction() {
+		putValue(NAME, "Share");
+		putValue(SHORT_DESCRIPTION, "Share documents");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+	}
+
+}

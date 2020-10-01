@@ -1,0 +1,50 @@
+package view.painters;
+
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+
+import model.elements.CircleElement;
+import model.elements.Slot;
+
+public class CirclePainter extends Painter {
+	
+	private CircleElement krug;
+	
+
+	public CirclePainter(Slot slotElement) {
+		super(slotElement);
+		
+		krug = (CircleElement) slotElement;
+		Draw();
+	}
+	
+	
+	@Override
+	public void Draw() {
+		shape = new GeneralPath();
+		
+		((GeneralPath)shape).moveTo(krug.getPosition().getX()+krug.getDimension().getWidth()/2,krug.getPosition().getY());
+
+		((GeneralPath)shape).quadTo(krug.getPosition().getX()+krug.getDimension().getWidth(), krug.getPosition().getY(),
+				krug.getPosition().getX()+krug.getDimension().getWidth(), krug.getPosition().getY()+krug.getDimension().getHeight()/2);
+
+		((GeneralPath)shape).quadTo(krug.getPosition().getX()+krug.getDimension().getWidth(), krug.getPosition().getY()+krug.getDimension().getHeight(),
+				krug.getPosition().getX()+krug.getDimension().getWidth()/2, krug.getPosition().getY()+krug.getDimension().getHeight());
+
+		((GeneralPath)shape).quadTo(krug.getPosition().getX(), krug.getPosition().getY()+krug.getDimension().getHeight(),
+				krug.getPosition().getX(), krug.getPosition().getY()+krug.getDimension().getHeight()/2);
+
+
+		((GeneralPath)shape).quadTo(krug.getPosition().getX(), krug.getPosition().getY(),
+				krug.getPosition().getX()+krug.getDimension().getWidth()/2,krug.getPosition().getY());
+		
+		oldShape = shape;
+		
+		Point figCenter = new Point(krug.getPosition().x + krug.getDimension().width/2,
+				krug.getPosition().y+krug.getDimension().height/2);
+		AffineTransform af = AffineTransform.getRotateInstance(krug.getAngle(), figCenter.x, figCenter.y);
+		shape = af.createTransformedShape(shape);
+	}
+
+}

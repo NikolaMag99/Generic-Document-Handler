@@ -1,0 +1,39 @@
+package actions;
+
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+
+import javax.swing.tree.TreePath;
+
+import actions.manager.AbstractActionIcon;
+import enums.Share;
+import gui.MainFrame;
+import gui.ShareDialog;
+import model.Document;
+
+public class ShareDocumentsAction extends AbstractActionIcon {
+
+	public ShareDocumentsAction() {
+		putValue(NAME, "Share");
+		putValue(SHORT_DESCRIPTION, "Share documents");
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		TreePath tp[] = MainFrame.getInstance().getTree().getSelectionPaths();
+		ArrayList<Document> docs = new ArrayList<>();
+		if (tp.length == 0)
+			return;
+		for (TreePath tPath : tp) {
+			for (int i = 0; i < tPath.getPathCount(); i++) {
+				if (tPath.getPathComponent(i) instanceof Document) {
+					docs.add((Document)tPath.getPathComponent(i));
+				}
+			}
+		}
+		ShareDialog pDialog = new ShareDialog(MainFrame.getInstance(), docs, Share.SHARE);
+		pDialog.setVisible(true);
+		
+	}
+
+}

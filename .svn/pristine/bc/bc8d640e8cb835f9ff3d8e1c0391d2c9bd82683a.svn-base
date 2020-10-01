@@ -1,0 +1,66 @@
+package commadns;
+
+import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Observer;
+
+import events.PageEvent.PageEventType;
+import model.Page;
+import model.elements.Slot;
+import model.elements.SlotDevice;
+
+public class MoveCommand extends Command {
+	
+	private Page page;
+	private ArrayList<SlotDevice> slots = new ArrayList<>();
+	private ArrayList<Point>  lastPos;
+	private ArrayList<Point> currPos;
+	private Slot currElement;
+	
+	
+	public MoveCommand(Page page, ArrayList<Point>currPos ) {
+		super();
+		this.page = page;
+		
+		
+		for (SlotDevice sd1 : page.getSelectedSlots()) {
+			for (SlotDevice sd2 : page.getSlotDevices()) {
+				if (sd1.equals(sd2)) {
+					this.slots.add(sd2);
+				}
+			}
+		}
+		
+		
+		
+		
+	}
+
+	@Override
+	public void doCommand() {
+		
+		/*
+		Slot element = page.getSelectedSlots().get(page.getElement(currElement));
+		page.getSelectedSlots().clear();
+		((SlotDevice) element).setPosition(currPos);
+		element.getSlotPainter().draw();
+		page.addObserver((Observer) element);
+		*/
+	}
+
+	@Override
+	public void undoCommand() {
+		
+	
+		
+		/*
+		Slot element = page.getSelectedSlots().get(page.getElement(currElement));
+		page.getSelectedSlots().clear();
+		((SlotDevice) element).setPosition(lastPos);
+		element.getSlotPainter().draw();
+		page.addObserver((Observer) element);
+		*/
+	}
+
+}

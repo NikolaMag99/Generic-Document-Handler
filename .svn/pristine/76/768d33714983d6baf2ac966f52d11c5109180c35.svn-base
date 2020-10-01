@@ -1,0 +1,77 @@
+package actions;
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+
+import javax.swing.JFileChooser;
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrame;
+import model.Project;
+import model.Workspace;
+
+public class SaveWorkspaceAction extends AbstractActionIcon {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public SaveWorkspaceAction(Dimension d) {
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F1, ActionEvent.CTRL_MASK));
+		putValue(SMALL_ICON, iconGetter("/toolbar/save.png", d));
+		putValue(NAME, ("SaveWs"));
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JFileChooser jfc = new JFileChooser();
+
+		File workspaceFolder = null;
+		JTree tree = MainFrame.getInstance().getTree();
+		Object selectedComponent = tree.getLastSelectedPathComponent();
+
+		if (selectedComponent instanceof Workspace) {
+			jfc.setDialogTitle("Select folder to save workspace");
+			jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+			Workspace workspace = (Workspace) selectedComponent;
+
+			// Biranje fajla u koji se snima projekat
+			int choosedOption = jfc.showSaveDialog(MainFrame.getInstance());
+			if (choosedOption != JFileChooser.APPROVE_OPTION) {
+				return;
+			}
+			workspaceFolder = jfc.getSelectedFile();
+			File workspacetFolder = new File(workspaceFolder.getAbsolutePath() + "\\" + workspace.getName());
+			workspacetFolder.mkdir();
+			File workSpaceFile = new File(workspacetFolder + "\\" + "WORKSPACE.grws");
+
+			workspace.setWorkspaceModified(false);
+
+			// Snimanje projekta u izabrani fajl.
+			for (Project pro : workspace.getProjects()) {
+				ObjectOutputStream os;
+				try {
+					File projectFile = new File(workspacetFolder + "\\" + pro.getName() + ".gpro");
+					pro.setProjectFile(workSpaceFile);
+					os = new ObjectOutputStream(new FileOutputStream(workSpaceFile));
+					os.writeObject(pro);
+
+					os.close();
+
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+			workspace.setWorkSpaceFile(workSpaceFile);
+		}
+	}
+}

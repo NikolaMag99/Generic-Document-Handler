@@ -1,0 +1,27 @@
+package actions;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrame;
+import view.DocumentView;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+
+public class RectangleAction extends AbstractActionIcon {
+
+    public RectangleAction(Dimension d) {
+
+
+        putValue(SMALL_ICON, iconGetter("/slotToolBar/rectangle.jpg", d));
+        putValue(NAME, ("Rectangle"));
+        putValue(SHORT_DESCRIPTION, ("Rectangle"));
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        ((DocumentView) MainFrame.getInstance().getWorkspaceView().getProjView().getTabbedPane().getSelectedComponent())
+                .getFocusPage().getPage().startRectangleState();
+    }
+
+}

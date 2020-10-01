@@ -1,0 +1,41 @@
+package commadns;
+
+import java.awt.Point;
+import java.util.ArrayList;
+
+import model.Page;
+import model.elements.SlotDevice;
+
+public class MoveCommand extends Command {
+	
+	private Page page;
+	private ArrayList<SlotDevice> slots = new ArrayList<>();
+	private ArrayList<Point> oldsp = new ArrayList<>();
+	private ArrayList<Point> newsp = new ArrayList<>();
+	public MoveCommand(Page page, ArrayList<Point> oldsp, ArrayList<Point> newsp) {
+		super();
+		this.page = page;
+		
+		for (SlotDevice sd1 : page.getSelectedSlots()) {
+			for (SlotDevice sd2 : page.getSlotDevices()) {
+				if (sd1.equals(sd2)) {
+					this.slots.add(sd2);
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public void doCommand() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void undoCommand() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

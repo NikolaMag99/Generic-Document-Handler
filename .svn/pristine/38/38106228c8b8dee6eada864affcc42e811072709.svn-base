@@ -1,0 +1,120 @@
+package state;
+
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+
+import javax.swing.text.Document;
+
+import model.Page;
+import model.Project;
+import model.Workspace;
+import model.elements.SlotDevice;
+import view.PageView;
+
+public class ResizeState extends State {
+
+	private PageView page;
+
+	public ResizeState(PageView pageView) {
+		this.page = pageView;
+	}
+
+	@Override
+	public void mousePressed(MouseEvent event) {
+		for (SlotDevice slotDevice : page.getPage().getSlotDevices()) {
+			if (slotDevice.getSlotPainter().elementAt(event.getPoint())) {
+				page.getPage().setSelectSlot(slotDevice);
+				page.getPage().getSelectedSlots().add(slotDevice);
+				return;
+			}
+		}
+		page.getPage().setSelectSlot(null);
+		page.getPage().getSelectedSlots().clear();
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent event) {
+		SlotDevice selectedSlot = page.getPage().getSelectSlot();
+		if (handle == null) {
+			return;
+		}
+		SlotDevice selectSlot = selectedSlot;
+		Point eventPoint = event.getPoint();
+		page.getPage().getSlotDevices().remove(selectSlot);
+		Dimension oldDimension = selectSlot.getDimension();
+		Point point = selectSlot.getPosition();
+		switch (handle) {
+		case North:
+			selectSlot.setPosition(new Point(point.x, eventPoint.y));
+			selectSlot.setDimension(new Dimension(oldDimension.width, (point.y - eventPoint.y) + oldDimension.height));
+			break;
+		case NorthWest:
+			selectSlot.setPosition(eventPoint);
+			selectSlot.setDimension(new Dimension(point.x - eventPoint.x + oldDimension.width,
+					(point.y - eventPoint.y) + oldDimension.height));
+			break;
+		case NorthEast:
+			selectSlot.setPosition(new Point(point.x, eventPoint.y));
+			selectSlot.setDimension(
+					new Dimension((eventPoint.x - point.x), (point.y - eventPoint.y) + oldDimension.height));
+			break;
+		case South:
+			selectSlot.setPosition(point);
+			selectSlot.setDimension(new Dimension(oldDimension.width, eventPoint.y - point.y));
+			break;
+		case SouthWest:
+			selectSlot.setPosition(new Point(eventPoint.x, point.y));
+			selectSlot.setDimension(new Dimension(point.x - eventPoint.x + oldDimension.width, eventPoint.y - point.y));
+			break;
+		case SouthEast:
+			selectSlot.setPosition(point);
+			selectSlot.setDimension(new Dimension((eventPoint.x - point.x), eventPoint.y - point.y));
+			break;
+		case East:
+			selectSlot.setPosition(point);
+			selectSlot.setDimension(new Dimension((eventPoint.x - point.x), oldDimension.height));
+			break;
+		case West:
+			selectSlot.setPosition(new Point(eventPoint.x, point.y));
+			selectSlot.setDimension(new Dimension(point.x - eventPoint.x + oldDimension.width, oldDimension.height));
+			break;
+		}
+		selectSlot.getSlotPainter().draw();
+		
+		page.getPage().getSlotDevices().add(selectSlot);
+		for (SlotDevice slot : page.getPage().getSelectedSlots()) {
+			if(slot!=page.getPage().getSelectSlot()) {
+				slot.setDimension(new Dimension(slot.getDimension().width + selectSlot.getDimension().width - oldDimension.width,
+                       slot.getDimension().height + selectSlot.getDimension().height - oldDimension.height));
+				slot.setPosition(new Point(slot.getPosition().x+selectSlot.getPosition().x-point.x,
+						slot.getPosition().y+selectSlot.getPosition().y-point.y));
+				slot.getSlotPainter().draw();
+			}
+			
+		}
+		
+		selectSlot.getSlotPainter().draw();
+        page.getPage().getSlotDevices().add(selectSlot);
+  /*
+		Document document = (Document)page.getPage().getParent();
+		Project proj = (Project) ((Project) document).getParent();
+		proj.updatePerformed(null);
+		Workspace workspace = (Workspace)proj.getParent();
+		workspace.updatePerformed(null);
+ */
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

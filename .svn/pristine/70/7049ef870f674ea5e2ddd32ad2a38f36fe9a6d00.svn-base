@@ -1,0 +1,79 @@
+package commadns;
+
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
+
+import events.PageEvent.PageEventType;
+import model.Page;
+import model.elements.SlotDevice;
+
+public class RotateCommand extends Command {
+
+	private Page page;
+	private SlotDevice selectSlot;
+	private ArrayList<SlotDevice> slots = new ArrayList<>();
+	private double oldAngle;
+	private double newAngle;
+
+	public RotateCommand(Page page, SlotDevice selSlot, ArrayList<SlotDevice> slots, double oldAngle, double newAngle) {
+		super();
+		this.page = page;
+		for (SlotDevice slot : page.getSlotDevices())
+			if (slot.equals(selSlot)) {
+				this.selectSlot = slot;
+				break;
+			}
+
+		for (SlotDevice sl : slots) {
+			for (SlotDevice sll : page.getSlotDevices()) {
+				if (sl.equals(sll)) {
+					this.slots.add(sll);
+				}
+			}
+		}
+		this.oldAngle = oldAngle;
+		this.newAngle = newAngle;
+	}
+
+	@Override
+	public void undoCommand() {
+		Point center = new Point(selectSlot.getPoint().x + selectSlot.getDimension().width / 2,
+				selectSlot.getPoint().y + selectSlot.getDimension().height / 2);
+		AffineTransform af = AffineTransform.getRotateInstance(oldAngle, center.x, center.y);
+		selectSlot.setAngle(oldAngle);
+		selectSlot.getSlotPainter().setShape(af.createTransformedShape(selectSlot.getSlotPainter().getOldShape()));
+
+		for (SlotDevice slotDevice : slots) {
+			Point center1 = new Point(slotDevice.getPoint().x + slotDevice.getDimension().width / 2,
+					slotDevice.getPoint().y + slotDevice.getDimension().height / 2);
+			af = AffineTransform.getRotateInstance(oldAngle, center1.x, center1.y);
+			slotDevice.setAngle(oldAngle);
+			slotDevice.getSlotPainter().setShape(af.createTransformedShape(slotDevice.getSlotPainter().getOldShape()));
+
+		}
+
+		page.notifyObservers(PageEventType.DRAW);
+	}
+
+	@Override
+	public void doCommand() {
+		Point center = new Point(selectSlot.getPoint().x + selectSlot.getDimension().width / 2,
+				selectSlot.getPoint().y + selectSlot.getDimension().height / 2);
+		AffineTransform af = AffineTransform.getRotateInstance(newAngle, center.x, center.y);
+		selectSlot.setAngle(newAngle);
+		selectSlot.getSlotPainter().setShape(af.createTransformedShape(selectSlot.getSlotPainter().getOldShape()));
+
+		for (SlotDevice slotDevice : slots) {
+			Point center1 = new Point(slotDevice.getPoint().x + slotDevice.getDimension().width / 2,
+					slotDevice.getPoint().y + slotDevice.getDimension().height / 2);
+			af = AffineTransform.getRotateInstance(newAngle, center1.x, center1.y);
+			slotDevice.setAngle(newAngle);
+			slotDevice.getSlotPainter().setShape(af.createTransformedShape(slotDevice.getSlotPainter().getOldShape()));
+
+		}
+		// provera
+		page.notifyObservers(this);
+	}
+
+}

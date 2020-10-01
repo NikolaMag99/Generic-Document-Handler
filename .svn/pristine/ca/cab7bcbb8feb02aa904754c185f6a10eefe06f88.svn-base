@@ -1,0 +1,24 @@
+package factory;
+
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
+
+import model.Project;
+
+public class ProjectFactory extends NodeFactory {
+
+	@Override
+	public MutableTreeNode createNode() {
+	
+		return new Project("");
+	}
+	
+	@Override
+	public void deliverNode(DefaultMutableTreeNode parent) {
+		MutableTreeNode node=createNode();
+		  parent.add(node);
+		
+	}
+
+}

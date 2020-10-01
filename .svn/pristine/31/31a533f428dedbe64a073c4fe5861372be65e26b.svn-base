@@ -1,0 +1,190 @@
+package gui;
+
+import gui.segments.MenuBarGerudok;
+import gui.segments.ToolBarGerudok;
+import model.Workspace;
+
+import tree.listener.JTreeControllerGerudok;
+import tree.view.TreeCellRendered;
+import tree.view.TreeEditor;
+import tree.view.TreePopUp;
+import view.WorkspaceView;
+
+import java.awt.BorderLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
+
+import javax.swing.DropMode;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTree;
+import javax.swing.WindowConstants;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
+
+public class MainFrameGerudok extends JFrame {
+
+	private static MainFrameGerudok instance = null;
+	
+	private JTree tree = null;
+	private WorkspaceView workspaceView = null;
+	private MenuBarGerudok menuBar = null;
+
+	private ToolBarGerudok toolBar = null;
+
+
+	
+	private MainFrameGerudok() {
+		super();
+	}
+	
+	private void initMainFrameGerudok() {
+		
+
+
+		setTitle("Paki");
+
+		// podesavanje velicine i pozicije prozora
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		int height = kit.getScreenSize().height;
+		int width = kit.getScreenSize().width;
+		setSize((int) (width * 0.6), (int) (height * 0.8));
+		setLocationRelativeTo(null);
+		addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				MainFrameGerudok frame = (MainFrameGerudok) e.getComponent();
+ 				int check = JOptionPane.showConfirmDialog(frame, ("Closing"),
+						("CloseTitle"), JOptionPane.YES_NO_OPTION);
+				if (check != JOptionPane.YES_OPTION) {
+					frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+				} else {
+					frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+				}
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+
+		// Postavljanje ikone
+		Image img = kit.getImage("");
+		setIconImage(img); 
+
+		// MENUBAR
+		menuBar = new MenuBarGerudok();
+		setJMenuBar(menuBar);
+
+		// TOOLBAR
+		toolBar = new ToolBarGerudok();
+		add(toolBar, BorderLayout.NORTH);
+
+		// SPLIT PANE (WorkspaceView + JTREE)
+		workspaceView = new WorkspaceView();
+		//workspaceView.setBackground(getBackground());
+		tree = initTree(workspaceView);
+		JScrollPane sp = new JScrollPane(tree);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sp, workspaceView);
+		add(splitPane, BorderLayout.CENTER);
+
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		setVisible(true);
+		splitPane.setDividerLocation(0.2);
+		
+	}
+
+	// Inicijalizacija JTreeGerudok
+	private JTree initTree(WorkspaceView workspaceView) {
+		Workspace root = new Workspace();
+		root.addObserver(workspaceView);
+		JTree tree = new JTree(root);
+		tree.setModel(new DefaultTreeModel(root));
+		tree.addTreeSelectionListener(new JTreeControllerGerudok());
+		tree.setCellEditor(new TreeEditor(tree, new DefaultTreeCellRenderer()));
+		tree.setCellRenderer(new TreeCellRendered());
+		tree.setComponentPopupMenu(new TreePopUp());
+		tree.setEditable(true);
+		
+
+		//tree.getSelectionModel().setSelectionMode(TreeSelectionModel.CONTIGUOUS_TREE_SELECTION);
+		//tree.setDragEnabled(true);
+		//tree.setDropMode(DropMode.ON_OR_INSERT);
+
+		
+		return tree;
+	}
+
+	public static MainFrameGerudok getInstance() {
+		if (instance == null)
+		{
+			instance = new MainFrameGerudok();
+			instance.initMainFrameGerudok();
+		}
+
+		return instance;
+	}
+
+	public JTree getTree() {
+		return tree;
+	}
+
+
+	
+	public WorkspaceView getWorkspaceView() {
+		return workspaceView;
+	}
+
+	public MenuBarGerudok getMenu() {
+		return menuBar;
+	}
+
+
+
+	public ToolBarGerudok getToolBar() {
+		return toolBar;
+	}
+	
+
+}

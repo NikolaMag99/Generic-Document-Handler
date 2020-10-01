@@ -1,0 +1,18 @@
+package model.elements;
+
+import java.awt.Dimension;
+import java.awt.Paint;
+import java.awt.Point;
+import java.awt.Stroke;
+
+import model.Page;
+import view.painters.RectanglePainter;
+
+public class RectangleElement extends SlotDevice {
+
+	public RectangleElement(Paint paint, Stroke stroke, String name, Dimension dimension, Point position, double angle) {
+		super(paint, stroke,name, dimension, position, angle);
+		slotPainter = new RectanglePainter(this);
+	}
+
+}

@@ -1,0 +1,126 @@
+package actions.manager;
+
+
+
+import actions.AboutAction;
+import actions.DeleteNode;
+import actions.DisplayProject;
+import actions.ImportDocumentAction;
+import actions.NewDocumentAction;
+import actions.NewPageAction;
+import actions.NewProjectAction;
+import actions.OpenProjectAction;
+import actions.QuitAction;
+import actions.RenameNode;
+import actions.SaveAsProjectAction;
+import actions.SaveProjectAction;
+
+public class ActionManager {
+
+	private AboutAction about;
+
+
+	private DeleteNode deletenode;
+	private DisplayProject displayproject;
+
+	private NewDocumentAction newdocument;
+	private NewPageAction newpage;
+	private NewProjectAction newproject;
+	private OpenProjectAction openproject;
+	private RenameNode renamenode;
+	private SaveAsProjectAction saveas;
+	private SaveProjectAction save;
+
+	private QuitAction quit;
+
+
+
+	private ImportDocumentAction importDoc;
+	
+
+
+	private static ActionManager instance = null;
+
+	private ActionManager() {
+		about = new AboutAction(AbstractActionIcon.small);
+		deletenode = new DeleteNode(AbstractActionIcon.small);
+		displayproject = new DisplayProject();
+		newdocument = new NewDocumentAction(AbstractActionIcon.small);
+		newpage = new NewPageAction(AbstractActionIcon.small);
+		newproject = new NewProjectAction(AbstractActionIcon.small);
+		openproject = new OpenProjectAction(AbstractActionIcon.small);
+		renamenode = new RenameNode();
+		saveas = new SaveAsProjectAction(AbstractActionIcon.small);
+		save = new SaveProjectAction(AbstractActionIcon.small);
+		quit = new QuitAction(AbstractActionIcon.small);
+		importDoc = new ImportDocumentAction(AbstractActionIcon.small);
+		
+
+	}
+
+	public AboutAction getAbout() {
+		return about;
+	}
+
+
+	public DeleteNode getDeletenode() {
+		return deletenode;
+	}
+
+	public DisplayProject getDisplayproject() {
+		return displayproject;
+	}
+
+
+
+	public NewDocumentAction getNewdocument() {
+		return newdocument;
+	}
+
+	public NewPageAction getNewpage() {
+		return newpage;
+	}
+
+	public NewProjectAction getNewproject() {
+		return newproject;
+	}
+
+
+	public OpenProjectAction getOpenproject() {
+		return openproject;
+	}
+
+	public RenameNode getRenamenode() {
+		return renamenode;
+	}
+
+	public SaveAsProjectAction getSaveas() {
+		return saveas;
+	}
+
+	public SaveProjectAction getSave() {
+		return save;
+	}
+
+
+	public QuitAction getQuitaction() {
+		return quit;
+	}
+
+
+
+	public ImportDocumentAction getImportAction() {
+		return importDoc;
+	}
+	
+
+
+
+
+	public static ActionManager getInstance() {
+		if (instance == null)
+			instance = new ActionManager();
+
+		return instance;
+	}
+}

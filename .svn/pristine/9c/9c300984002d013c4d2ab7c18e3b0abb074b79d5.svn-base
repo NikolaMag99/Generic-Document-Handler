@@ -1,0 +1,54 @@
+package commadns;
+
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
+
+import events.PageEvent.PageEventType;
+import model.Page;
+import model.elements.SlotDevice;
+
+public class RotateCommand extends Command {
+
+	private Page page;
+	private SlotDevice selectSlot;
+	private ArrayList<SlotDevice> slots = new ArrayList<>();
+	private double oldAngle;
+	private double newAngle;
+
+	public RotateCommand(Page page, SlotDevice selSlot, ArrayList<SlotDevice> slots, double oldAngle, double newAngle) {
+		super();
+		
+	}
+
+	@Override
+	public void undoCommand() {
+	
+	}
+
+	@Override
+	public void doCommand() {
+		/*
+		Point center = new Point(selectSlot.getPoint().x + selectSlot.getDimension().width / 2,
+				selectSlot.getPoint().y + selectSlot.getDimension().height / 2);
+		AffineTransform af = AffineTransform.getRotateInstance(newAngle, center.x, center.y);
+		selectSlot.setAngle(newAngle);
+		selectSlot.getSlotPainter().setShape(af.createTransformedShape(selectSlot.getSlotPainter().getOldShape()));
+
+		for (SlotDevice slotDevice : slots) {
+			Point center1 = new Point(slotDevice.getPoint().x + slotDevice.getDimension().width / 2,
+					slotDevice.getPoint().y + slotDevice.getDimension().height / 2);
+			af = AffineTransform.getRotateInstance(newAngle, center1.x, center1.y);
+			slotDevice.setAngle(newAngle);
+			slotDevice.getSlotPainter().setShape(af.createTransformedShape(slotDevice.getSlotPainter().getOldShape()));
+
+		}
+		// provera
+		page.notifyObservers(PageEventType.DRAW);
+	}
+	
+	*/
+	}
+	
+}
+

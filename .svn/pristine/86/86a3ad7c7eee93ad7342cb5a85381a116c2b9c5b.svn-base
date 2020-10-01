@@ -1,0 +1,31 @@
+package actions;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import model.MyTreeNode;
+import view.MainFrame;
+import view.TabPane;
+
+public class OpenTab extends MouseAdapter{
+	private MyTreeNode selected = null;
+	private TabPane tab = null;
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		MyTreeNode selected = (MyTreeNode) MainFrame.getInstance().getTree().getLastSelectedPathComponent();
+		tab = MainFrame.getInstance().getTabPane();
+		MyTreeNode tmp=selected;
+		int broj=0;
+		while(tmp.getParent()!=null)
+		{
+			broj++;
+			tmp=tmp.getParent();
+		}
+		if(e.getClickCount() == 3&&broj==1)
+		{
+			tab.openTab(selected);
+		}
+	}
+
+}

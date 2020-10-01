@@ -1,0 +1,24 @@
+package actions;
+
+import java.awt.event.ActionEvent;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrameGerudok;
+import view.WorkspaceView;
+
+public class CloseAction extends AbstractActionIcon {
+	
+	public CloseAction() {
+		
+		putValue(NAME, "Close");
+		putValue(SHORT_DESCRIPTION, "Close action");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		WorkspaceView workSpaceView = MainFrameGerudok.getInstance().getWorkspaceView();
+		workSpaceView.removeSelectedTab();
+		
+	}
+
+}

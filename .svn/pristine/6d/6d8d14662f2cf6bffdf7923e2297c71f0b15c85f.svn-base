@@ -1,0 +1,84 @@
+package actions;
+
+import controller.WriteInFile;
+
+public class ActionManager {
+
+	private static ActionManager instance=null;
+	
+	AboutListener aboutListener;
+	AddNode addNode;
+	OpenFile openFile;
+	WriteInFile writeInFile;
+	Save save;
+	SaveAs saveas;
+	DeleteNode deleteNode;
+	OpenTab openTab;
+	CloseTab closeTab;
+	CloseAllTabs closeAllTab;
+	
+	public ActionManager() {
+		
+		aboutListener=new AboutListener();
+		addNode=new AddNode();
+		openFile=new OpenFile();
+		writeInFile=new WriteInFile();
+		save=new Save();
+		saveas=new SaveAs();
+		deleteNode=new DeleteNode();
+		openTab = new OpenTab();
+		closeTab=new CloseTab();
+		closeAllTab = new CloseAllTabs();
+	}
+	
+	public CloseAllTabs getCloseAllTab() {
+		return closeAllTab;
+	}
+	
+	public OpenTab getOpenTab() {
+		return openTab;
+	}
+	
+	public AboutListener getAboutListener() {
+		return aboutListener;
+	}
+	
+
+	public AddNode getAddNode() {
+		return addNode;
+	}
+	
+	
+	public CloseTab getCloseTab() {
+		return closeTab;
+	}
+
+	public DeleteNode getDeleteNode() {
+		return deleteNode;
+	}
+
+	public Save getSave() {
+		return save;
+	}
+	
+	public WriteInFile getWriteInFile() {
+		return writeInFile;
+	}
+
+	public OpenFile getOpenFile() {
+		return openFile;
+	}
+
+	
+	public SaveAs getSaveas() {
+		return saveas;
+	}
+
+	public static ActionManager getInstance() {
+		if(instance==null) {
+			instance=new ActionManager();
+		}
+		return instance;
+	}
+	
+}

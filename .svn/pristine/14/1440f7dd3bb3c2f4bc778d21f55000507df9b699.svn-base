@@ -1,0 +1,30 @@
+package commadns;
+
+import model.Page;
+import model.elements.SlotDevice;
+
+public class AddCommand extends Command {
+	
+	
+	private Page page;
+	private SlotDevice slot = null;
+
+	public AddCommand(Page page, SlotDevice slot) {
+		super();
+		this.page = page;
+		this.slot = slot;
+	}
+
+	@Override
+	public void doCommand() {
+		page.addSlotDevice(slot);
+		
+	}
+
+	@Override
+	public void undoCommand() {
+		page.removeDevice(slot);
+		
+	}
+
+}

@@ -1,0 +1,50 @@
+package commadns;
+
+import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Observer;
+
+import model.Page;
+import model.elements.Slot;
+import model.elements.SlotDevice;
+
+public class MoveCommand extends Command {
+	
+	private Page page;
+	private ArrayList<SlotDevice> slots = new ArrayList<>();
+	private Point lastPos;
+	private Point currPos;
+	private Slot currElement;
+	
+	
+	public MoveCommand(Page page, Point lastPos, Point currPos, Slot currElement) {
+		super();
+		this.page = page;
+		this.lastPos = lastPos;
+		this.currElement = currElement;
+		this.currPos = currPos;
+		
+		
+	}
+
+	@Override
+	public void doCommand() {
+		Slot element = page.getSelectedSlots().get(page.getElement(currElement));
+		page.getSelectedSlots().clear();
+		((SlotDevice) element).setPosition(currPos);
+		element.getSlotPainter().draw();
+		page.addObserver((Observer) element);
+	}
+
+	@Override
+	public void undoCommand() {
+		Slot element = page.getSelectedSlots().get(page.getElement(currElement));
+		page.getSelectedSlots().clear();
+		((SlotDevice) element).setPosition(lastPos);
+		element.getSlotPainter().draw();
+		page.addObserver((Observer) element);
+		
+	}
+
+}

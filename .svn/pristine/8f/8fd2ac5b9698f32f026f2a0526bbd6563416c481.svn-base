@@ -1,0 +1,307 @@
+package view;
+
+import enums.Handle;
+import events.PageEvent;
+import events.PageEvent.PageEventType;
+import gui.MainFrame;
+import model.Page;
+import model.elements.SlotDevice;
+import state.ResizeState;
+import state.StateManager;
+import view.painters.Handler;
+import view.painters.SlotView;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+
+
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
+public class PageView extends JPanel implements Observer {
+
+	public static final int PAGE_HEIGHT = 380;
+	public static final int PAGE_WIDTH = 300;
+
+	private DocumentView docView;
+	private Page page;
+	private String name;
+	private ArrayList<SlotView> slotViews = new ArrayList<SlotView>();
+	private StateManager stateManager;
+	private Point lastPosition=null;
+	Handler handler;
+	Rectangle2D selectionRectangle;
+
+	public PageView(DocumentView documentView, Page page) {
+		this.docView = documentView;
+		this.page = page;
+		this.name = page.getName();
+		selectionRectangle=new Rectangle2D.Double();
+		stateManager=new StateManager(this);
+		setPreferredSize(new Dimension(PAGE_WIDTH, PAGE_HEIGHT));
+		TitledBorder border = BorderFactory.createTitledBorder(name);
+		border.setTitleColor(Color.BLACK);
+		setBorder(border);
+		this.page.addObserver(this);
+
+		this.addMouseListener(new MouseController(this));
+		this.addMouseMotionListener(new MouseMotionController(this));
+		revalidate();
+		handler = new Handler();
+	}
+	
+	
+	public Rectangle2D getSelectionRectangle() {
+		return selectionRectangle;
+	}
+	public void setSelectionRectangle(Rectangle2D selectionRectangle) {
+		this.selectionRectangle = selectionRectangle;
+	}
+	
+	@Override
+	public void update(Observable o, Object arg) {
+		if (arg == null)
+			return;
+
+		PageEvent eventObject =  (PageEvent) arg;
+
+		if (eventObject.getType() == PageEventType.RENAME_PAGE) {
+			this.name = page.getName();
+			this.setName(name);
+
+		} else if (eventObject.getType() == PageEventType.DRAW) {
+			repaint();
+
+		}
+		MainFrame.getInstance().repaint();
+		MainFrame.getInstance().revalidate();
+		SwingUtilities.updateComponentTreeUI(MainFrame.getInstance().getTree());
+	}
+
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		
+		handler.setG2d((Graphics2D)g);
+
+		super.paintComponent(g);
+		Graphics2D g2=(Graphics2D)g;
+		
+		if(page.getSelectSlot()!=null) {
+			page.getSlotDevices().remove(page.getSelectSlot());
+			page.getSlotDevices().add(page.getSelectSlot());
+		}
+		
+		for(SlotDevice sl:page.getSlotDevices()) {
+			SlotView slPainter=sl.getSlotPainter();
+			slPainter.paint(sl, g2);	
+		}
+		
+		for(SlotDevice sl : page.getSelectedSlots()) {
+			SlotView slPainter=sl.getSlotPainter();
+			sl.getSlotPainter().draw();
+			g2.setPaint(Color.GREEN);
+			g2.setStroke(sl.getStroke());
+			g2.draw(slPainter.getShape());
+			g2.setPaint(sl.getPaint());
+			g2.fill(slPainter.getShape());
+		}
+		
+		if(page.getSelectSlot()!=null && stateManager.getState() instanceof ResizeState) {
+			for(SlotDevice slotDevice:page.getSelectedSlots()) {
+				handler.setSelectedSlot(slotDevice);
+				handler.paintSlotHandles();
+			}
+			
+		}
+
+        g2.setColor(Color.RED);
+        g2.setStroke(new BasicStroke((float)1, BasicStroke.CAP_SQUARE,
+                BasicStroke.JOIN_BEVEL, 1f, new float[]{(float)3, (float)6}, 0 ));
+        g2.draw(selectionRectangle);
+	}
+	
+
+
+	public DocumentView getDocumentView() {
+		return (DocumentView) getParent().getParent().getParent();
+	}
+
+	public ArrayList<SlotView> getSlotViews() {
+		return slotViews;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+		TitledBorder border = BorderFactory.createTitledBorder(name);
+		border.setTitleColor(Color.BLACK);
+		setBorder(border);
+	}
+
+	public Page getPage() {
+		return page;
+	}
+
+	private class MouseMotionController extends MouseMotionAdapter {
+		private PageView pageView;
+
+		public MouseMotionController(PageView p) {
+			pageView = p;
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent event) {
+			//Page page = ((PageView) event.getComponent()).getPage();
+			if (page.getSelectSlot() == null) {
+				return;
+			}
+			Cursor cursor = handler.setMouseCursor((Point2D) event.getPoint());
+			if (cursor != null)
+				pageView.setCursor(cursor);
+			else
+				pageView.setCursor(Cursor.getDefaultCursor());
+
+			if (!page.getSelectSlot().getSlotPainter().elementAt(event.getPoint()))
+				pageView.setCursor(Cursor.getDefaultCursor());
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent event) {
+			Handle handleForPoint = handler.getHandleForPoint(page.getSelectSlot(), event.getPoint());
+			
+			if (handleForPoint != null) {
+				stateManager.getState().setHandle(handleForPoint);
+				stateManager.getState().mouseDragged(event);
+				repaint();
+
+			}
+			stateManager.getState().mouseDragged(event);
+			repaint();
+			/*
+			if (page.getSelectSlot() != null) {
+				stateManager.getState().mouseDragged(event);
+				repaint();
+			}
+			*/
+		}
+	}
+
+	private class MouseController extends MouseAdapter {
+		private PageView pageView;
+
+		public MouseController(PageView p) {
+			pageView = p;
+		}
+
+		@Override
+		public void mousePressed(MouseEvent event) {
+			lastPosition=event.getPoint();
+			docView.setFocusPage(pageView, event);
+
+			if (stateManager == null || stateManager.getState() == null)
+				return;
+			if (stateManager.getState() instanceof ResizeState) {
+				stateManager.getState().setGraphics(pageView.getGraphics());
+
+			}
+			stateManager.getState().mousePressed(event);
+			pageView.repaint();
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			stateManager.getState().mouseReleased(e);
+			System.out.println("Klik");
+			pageView.repaint();
+		}
+	}
+	
+	public void startRectangleState() {
+		if (stateManager == null) {
+			stateManager = new StateManager(this);
+		}
+		stateManager.setRectangleState();
+	}
+
+	public void startTriangleState() {
+		if (stateManager == null) {
+			stateManager = new StateManager(this);
+		}
+		stateManager.setTriangleState();
+	}
+
+	public void startCircleState() {
+		if (stateManager == null) {
+			stateManager = new StateManager(this);
+		}
+		stateManager.setCircleState();
+	}
+
+	public void startResizeState() {
+		if (stateManager == null) {
+			stateManager = new StateManager(this);
+		}
+		stateManager.setResizeState();
+	}
+
+	public void startRotateState() {
+		if (stateManager == null) {
+			stateManager = new StateManager(this);
+		}
+		stateManager.setRotateState();
+	}
+	public void startMoveState() {
+		if (stateManager == null) {
+			stateManager = new StateManager(this);
+		}
+		stateManager.setMoveState();
+	}
+	
+	public void startSelectState() {
+		if (stateManager == null) {
+			stateManager=new StateManager(this);
+		}
+		stateManager.setSelectState();
+	}
+	
+	public void startLassoState() {
+		if (stateManager == null) {
+			stateManager=new StateManager(this);
+		}
+		stateManager.setLassoState();
+	}
+	
+	public void startDeleteState() {
+		if (stateManager == null) {
+			stateManager = new StateManager(this);
+		}
+		stateManager.setDeleteState();
+	}
+	
+	public void startSelectObjectState() {
+		if (stateManager == null) {
+			stateManager=new StateManager(this);
+		}
+		stateManager.setSelectState();
+	}
+	
+	public Point getLastPosition() {
+		return lastPosition;
+	}
+
+	public void setLastPosition(Point lastPosition) {
+		this.lastPosition = lastPosition;
+	}
+	
+	
+}

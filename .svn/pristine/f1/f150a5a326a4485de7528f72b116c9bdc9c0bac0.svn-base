@@ -1,0 +1,40 @@
+package actions;
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
+
+import actions.manager.AbstractActionIcon;
+import factory.FabricGen;
+import factory.NodeFactory;
+import gui.MainFrameGerudok;
+
+public class NewAction extends AbstractActionIcon {
+	
+	public NewAction(Dimension d) {
+	putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+	putValue(MNEMONIC_KEY, KeyEvent.VK_N);
+	putValue(SMALL_ICON, iconGetter("/toolbar/addpage.png", d));
+	putValue(NAME, ("New"));
+	putValue(SHORT_DESCRIPTION, ("New"));
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JTree tree = MainFrameGerudok.getInstance().getTree();
+		Object selectedComponent = tree.getLastSelectedPathComponent();
+		TreePath path = tree.getSelectionPath();
+		NodeFactory node = FabricGen.generateFacotry(selectedComponent);
+		node.deliverNode((MutableTreeNode)selectedComponent);
+			
+		MainFrameGerudok.getInstance().getTree().updateUI();
+		MainFrameGerudok.getInstance().getTree().expandPath(MainFrameGerudok.getInstance().getTree().getSelectionPath());
+		  SwingUtilities.updateComponentTreeUI(MainFrameGerudok.getInstance().getTree());
+	}
+
+}

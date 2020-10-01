@@ -1,0 +1,34 @@
+package view.painters;
+
+import java.awt.geom.GeneralPath;
+
+import model.elements.CircleElement;
+import model.elements.Slot;
+
+public class CirclePainter extends Painter {
+
+	public CirclePainter(Slot slotElement) {
+		super(slotElement);
+		
+		CircleElement circEl = (CircleElement) slotElement;
+
+		shape=new GeneralPath();
+
+		((GeneralPath)shape).moveTo(circEl.getPosition().getX()+circEl.getDimension().getWidth()/2,circEl.getPosition().getY());
+
+		((GeneralPath)shape).quadTo(circEl.getPosition().getX()+circEl.getDimension().getWidth(), circEl.getPosition().getY(),
+									circEl.getPosition().getX()+circEl.getDimension().getWidth(), circEl.getPosition().getY()+circEl.getDimension().getHeight()/2);
+
+		((GeneralPath)shape).quadTo(circEl.getPosition().getX()+circEl.getDimension().getWidth(), circEl.getPosition().getY()+circEl.getDimension().getHeight(),
+									circEl.getPosition().getX()+circEl.getDimension().getWidth()/2, circEl.getPosition().getY()+circEl.getDimension().getHeight());
+
+		((GeneralPath)shape).quadTo(circEl.getPosition().getX(), circEl.getPosition().getY()+circEl.getDimension().getHeight(),
+				circEl.getPosition().getX(), circEl.getPosition().getY()+circEl.getDimension().getHeight()/2);
+
+
+		((GeneralPath)shape).quadTo(circEl.getPosition().getX(), circEl.getPosition().getY(),
+				circEl.getPosition().getX()+circEl.getDimension().getWidth()/2,circEl.getPosition().getY());
+
+	}
+
+}

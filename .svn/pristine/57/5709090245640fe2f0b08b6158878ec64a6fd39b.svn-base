@@ -1,0 +1,25 @@
+package view.painters;
+
+import java.awt.geom.GeneralPath;
+
+import model.elements.RectangleElement;
+import model.elements.Slot;
+
+public class RectanglePainter extends Painter {
+
+	public RectanglePainter(Slot slotElement) {
+		super(slotElement);
+		
+		RectangleElement recEl = (RectangleElement)slotElement;
+		
+		shape = new GeneralPath();
+		
+		
+		((GeneralPath)shape).moveTo(recEl.getPosition().x, recEl.getPosition().y);
+		((GeneralPath)shape).lineTo(recEl.getPosition().x + recEl.getDimension().width, recEl.getPosition().y);
+		((GeneralPath)shape).lineTo(recEl.getPosition().x + recEl.getDimension().width, recEl.getPosition().y + recEl.getDimension().height);
+		((GeneralPath)shape).lineTo(recEl.getPosition().x, recEl.getPosition().y + recEl.getDimension().height);
+		((GeneralPath)shape).closePath();
+
+		}
+}

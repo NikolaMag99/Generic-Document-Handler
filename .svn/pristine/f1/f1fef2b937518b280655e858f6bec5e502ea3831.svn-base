@@ -1,0 +1,29 @@
+package actions;
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrame;
+import view.DocumentView;
+
+public class TriangleAction extends AbstractActionIcon {
+	
+	
+	 public TriangleAction(Dimension d) {
+			
+		 
+			putValue(SMALL_ICON, iconGetter("/slotToolBar/triangle.jpg", d));
+			putValue(NAME, ("Triangle"));
+			putValue(SHORT_DESCRIPTION, ("Triangle"));
+			
+		}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		((DocumentView) MainFrame.getInstance().getWorkspaceView().getProjView().getTabbedPane().getSelectedComponent())
+				.getFocusPage().getPage().startTriangleState();
+		
+	}
+
+}

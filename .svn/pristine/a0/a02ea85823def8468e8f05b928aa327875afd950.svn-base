@@ -1,0 +1,36 @@
+package state;
+
+import model.Page;
+
+public class StateManager {
+	
+	private State state = null;
+
+	private RectangleState rectangleState;
+	private TriangleState triangleState;
+	private CircleState circleState;
+
+	public StateManager(Page med) {
+		rectangleState = new RectangleState(med);
+		triangleState = new TriangleState(med);
+		circleState = new CircleState(med);
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setRectangleState() {
+		state = rectangleState;
+	}
+
+	public void setTriangleState() {
+		state = triangleState;
+	}
+
+	public void setCircleState() {
+		state = circleState;
+	}
+	
+
+}

@@ -1,0 +1,35 @@
+package gui.segments;
+
+import tree.listener.TreeMouseListener;
+import tree.view.TreePopUp;
+
+import javax.swing.JTree;
+
+public class JTreeGerudok extends JTree {
+
+	private TreePopUp popup;
+
+	public JTreeGerudok() {
+		super();
+		setEditable(true);
+		addListeners();
+		this.popup = new TreePopUp();
+		add(this.popup);
+	}
+
+	// za debug
+	public String toString() {
+		return "Stablo";
+	}
+
+	public TreePopUp getPopUp() {
+		this.popup.enableAll();
+		return this.popup;
+	}
+	
+
+	public void addListeners() {
+		addMouseListener(new TreeMouseListener());
+	}
+
+}

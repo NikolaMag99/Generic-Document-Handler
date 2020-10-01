@@ -1,0 +1,19 @@
+package view.painters;
+
+import javax.swing.*;
+
+import model.elements.Slot;
+import view.PageView;
+
+import java.awt.*;
+import java.util.Observer;
+
+public abstract class SlotView extends JPanel implements Observer {
+	
+	//dodaj slotElement za sve metode
+	public SlotView(Slot slotElement) {
+		super();
+	}
+	public abstract void paint(Slot slotElement, Graphics2D g);
+	public abstract boolean elementAt(Point pos);
+}

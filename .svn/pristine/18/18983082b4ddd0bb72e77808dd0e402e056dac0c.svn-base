@@ -1,0 +1,66 @@
+package state;
+
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+
+import gui.MainFrame;
+import model.elements.ElementType;
+import model.elements.Slot;
+import view.ElementChooser;
+import view.ImageEditor;
+import view.PageView;
+import view.TextEditor;
+
+public class SelectObjectState extends State {
+
+	private PageView mediator;
+	private Slot slot;
+
+	public SelectObjectState(PageView mediator) {
+		this.mediator = mediator;
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		Point position = e.getPoint();
+
+		if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+			slot = mediator.getPage().getDeviceAtPosition(position);
+			if (slot != null) {
+				if (slot.getType() == ElementType.NONE) {
+					ElementChooser dialog = new ElementChooser(MainFrame.getInstance(), "Select element type", true,
+							slot);
+					dialog.show();
+				}
+				if (slot.getType() == ElementType.TEXT) {
+					TextEditor text = new TextEditor(MainFrame.getInstance(), "Text editor", true, slot);
+					text.show();
+				} else {
+					ImageEditor image = new ImageEditor(MainFrame.getInstance(), "Image editor", true, slot);
+					image.show();
+				}
+
+			}
+		}
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent event) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent event) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent event) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

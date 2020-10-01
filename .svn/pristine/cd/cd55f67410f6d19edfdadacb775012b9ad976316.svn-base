@@ -1,0 +1,52 @@
+package state;
+
+import java.io.Serializable;
+
+import model.Page;
+
+public class StateManager implements Serializable{
+	
+	private State state = null;
+
+	private RectangleState rectangleState;
+	private TriangleState triangleState;
+	private CircleState circleState;
+	private ResizeState resizeState;
+	private RotateState rotateState;
+
+	public StateManager(Page page) {
+		rectangleState = new RectangleState(page);
+		triangleState = new TriangleState(page);
+		circleState = new CircleState(page);
+		resizeState = new ResizeState(page);
+		rotateState = new RotateState(page);
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setRectangleState() {
+		state = rectangleState;
+	}
+
+	public void setTriangleState() {
+		state = triangleState;
+	}
+
+	public void setCircleState() {
+		state = circleState;
+	}
+
+	public void setResizeState() {
+		state = resizeState;
+	}
+
+	public void setRotateState() {
+		state = rotateState;
+	}
+
+
+	
+
+}

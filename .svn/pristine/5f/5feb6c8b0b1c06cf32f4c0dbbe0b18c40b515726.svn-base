@@ -1,0 +1,197 @@
+package model;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.*;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+
+import events.PageEvent;
+import events.PageEvent.PageEventType;
+import gui.MainFrameGerudok;
+import model.elements.CircleElement;
+import model.elements.SlotDevice;
+import state.StateManager;
+
+public class Page extends Observable implements MutableTreeNode, Serializable, Observer {
+
+
+	private Document parent = null;
+	private String name = null;
+	private boolean pageModified;
+	private ArrayList<SlotDevice> slotDevices;
+	private transient StateManager stateManager;
+	
+
+	public StateManager getStateManager() {
+		return stateManager;
+	}
+
+	public void setStateManager(StateManager stateManager) {
+		this.stateManager = stateManager;
+	}
+	
+	public void startRectangleState() {
+		stateManager.setRectangleState();
+	}
+	
+	public void startTriangleState() {
+		stateManager.setTriangleState();
+	}
+	
+	public void startCircleState() {
+		stateManager.setCircleState();
+	}
+
+	
+	public Page(Document parent) {
+		super();
+		this.parent = parent;
+		slotDevices=new ArrayList<SlotDevice>();
+		stateManager=new StateManager(null);
+		addObserver(parent);
+	}
+
+	
+
+	public Object readResolve() {
+	
+		addObserver(parent);
+		return this;
+	}
+
+
+
+	public void setName(String name) {
+		this.name = name;
+		notifyObservers(new PageEvent(PageEventType.RENAME_PAGE, null));
+	}
+
+	public String toString() {
+		String indicator = pageModified ? "*" : "";
+		return indicator + name + "";
+	}
+
+	public boolean isPageModified() {
+		return pageModified;
+	}
+
+	public void setPageModified(boolean pageModified) {
+		this.pageModified = pageModified;
+		SwingUtilities.updateComponentTreeUI(MainFrameGerudok.getInstance().getTree());
+	}
+
+
+	public String getName() {
+		return this.name;
+	}
+
+
+	@Override
+	public boolean getAllowsChildren() {
+		return true;
+	}
+
+	@Override
+	public boolean isLeaf() {
+		return false;
+	}
+
+	@Override
+	public Enumeration children() {
+		return null;
+	}
+
+	@Override
+	public TreeNode getChildAt(int childIndex) {
+		return null;
+	}
+
+	@Override
+	public int getChildCount() {
+		return 0;
+	}
+
+	@Override
+	public TreeNode getParent() {
+		return parent;
+	}
+
+	@Override
+	public int getIndex(TreeNode node) {
+		return 0;
+	}
+
+	
+	@Override
+	public void update(Observable o, Object arg) {
+		// Prosledjuje obavestenje o promeni ka parent-u
+		notifyObservers();
+	}
+
+	@Override
+	public void insert(MutableTreeNode child, int index) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void remove(int index) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void remove(MutableTreeNode node) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setUserObject(Object object) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void removeFromParent() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setParent(MutableTreeNode newParent) {
+		// TODO Auto-generated method stub
+
+	}
+	
+	@Override
+	public void notifyObservers(Object arg){
+		setChanged();
+		super.notifyObservers(arg);
+	}
+
+
+
+	public void addSlotDevice(SlotDevice slot) {
+		slotDevices.add(slot);
+		notifyObservers(slot,PageEventType.DRAW);
+	}
+
+
+	// dodat obzerver za add slot proveriti da li radi
+	private void notifyObservers(SlotDevice slot, PageEventType draw) {
+		setChanged();
+		super.notifyObservers(slot);
+		
+	}
+	
+	public ArrayList<SlotDevice> getSlotDevices() {
+		return slotDevices;
+	}
+
+}

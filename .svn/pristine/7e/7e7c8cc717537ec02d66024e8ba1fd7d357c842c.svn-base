@@ -1,0 +1,101 @@
+package state;
+
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+
+import enums.Handle;
+import model.Page;
+import model.elements.SlotDevice;
+
+
+public class ResizeState extends State {
+	
+	 Boolean hovering = false;
+     Boolean resizing = true;
+	 private Page page;
+	 private Point clickPoint;
+     private StateManager originalBounds;
+	
+	
+
+	public ResizeState() {
+		super();
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		SlotDevice selectedSlot=null;
+		for(SlotDevice slotDevice:page.getSlotDevices()) {
+			if(slotDevice.getSlotPainter().elementAt(e.getPoint())) {
+				page.setSelectSlot(slotDevice);
+				return;
+			}
+		}
+		page.setSelectSlot(null);
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		SlotDevice selectedSlot = page.getSelectSlot();
+		if(handle==null)
+			return;
+		updateSelectedFigure(handle, e.getPoint(), selectedSlot);
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		if (resizing) {
+            System.out.println("Done resizing");
+            resizing = false;
+            clickPoint = null;
+            originalBounds = null;
+        }
+		
+	}
+
+	
+	public void updateSelectedFigure(Handle handle, Point p,SlotDevice selectSlot) {
+		page.getSlotDevices().remove(selectSlot);
+		Dimension stara = selectSlot.getDimension();
+		Point point = selectSlot.getPosition();
+		switch (handle) {
+		case North:
+			selectSlot.setPosition(new Point(point.x,p.y));
+			selectSlot.setDimension(new Dimension(stara.width,(point.y-p.y)+stara.height));
+			break;
+		case NorthWest:
+			selectSlot.setPosition(p);
+			selectSlot.setDimension(new Dimension(point.x-p.x+stara.width,(point.y-p.y)+stara.height));
+			break;
+		case NorthEast:
+			selectSlot.setPosition(new Point(point.x,p.y));
+			selectSlot.setDimension(new Dimension((p.x-point.x),(point.y-p.y)+stara.height));
+			break;
+		case South:
+			selectSlot.setPosition(point);
+			selectSlot.setDimension(new Dimension(stara.width,p.y-point.y));
+			break;
+		case SouthWest:
+			selectSlot.setPosition(new Point(p.x,point.y));
+			selectSlot.setDimension(new Dimension(point.x-p.x+stara.width,p.y-point.y));
+			break;
+		case SouthEast:
+			selectSlot.setPosition(point);
+			selectSlot.setDimension(new Dimension((p.x-point.x),p.y-point.y));
+			break;
+		case East:
+			selectSlot.setPosition(point);
+			selectSlot.setDimension(new Dimension((p.x-point.x),stara.height));
+			break;
+		case West:
+			selectSlot.setPosition(new Point(p.x,point.y));
+			selectSlot.setDimension(new Dimension(point.x-p.x+stara.width,stara.height));
+			break;
+		}
+		selectSlot.getSlotPainter().Draw();
+		page.getSlotDevices().add(selectSlot);	
+	}
+}

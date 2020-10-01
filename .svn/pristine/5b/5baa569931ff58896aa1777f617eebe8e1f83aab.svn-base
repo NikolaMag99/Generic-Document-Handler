@@ -1,0 +1,49 @@
+package state;
+
+import model.Page;
+import model.elements.RectangleElement;
+
+import java.awt.*;
+import java.awt.event.MouseEvent;
+
+public class RectangleState extends State {
+
+	private Page page;
+
+	public RectangleState(Page page) {
+		this.page = page;
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			Point pos = e.getPoint();
+			Paint fill = new Color(255, 255, 255);
+
+			RectangleElement rectangleElement = new RectangleElement(fill, new BasicStroke(2f), new Dimension(80, 40),
+					pos, 0);
+
+			page.addSlotDevice(rectangleElement);
+		}
+
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

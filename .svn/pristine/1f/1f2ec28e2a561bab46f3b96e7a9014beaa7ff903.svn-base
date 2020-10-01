@@ -1,0 +1,96 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JToolBar;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import gui.MainFrame;
+import model.elements.Slot;
+
+
+public class ImageEditor extends JDialog{
+
+	
+	private Slot slot;
+	private String imagePath;
+	private ImagePanel imagePanel;
+	
+		public ImageEditor(Frame parent, String title, boolean modal,Slot slot) {
+			super(parent, title, modal);
+			
+			this.slot=slot;
+			this.imagePanel=new ImagePanel("images/imagePicker.png");
+			this.setLayout(new BorderLayout());
+			this.setSize(500,500);
+			setLocationRelativeTo(parent);
+			
+			if(slot.getContent()!=null)
+			{
+				imagePath=slot.getContent();
+				updateImage();
+			}  	
+			
+			JToolBar toolbar=new JToolBar();
+			generateTools(toolbar);			
+			
+			this.add(toolbar,BorderLayout.NORTH);
+			this.add(imagePanel,BorderLayout.CENTER);
+			
+	 }
+	
+	private void generateTools(JToolBar toolbar) {
+		Icon icon=new ImageIcon("images/imagePicker.png");
+		JButton image=new JButton(icon);
+		
+		icon=new ImageIcon("images/saveFile.png");
+		JButton save=new JButton(icon);
+		
+		toolbar.add(image);
+		toolbar.addSeparator();
+	    toolbar.add(save);
+	    
+	    image.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				        "JPG & PNG Images", "jpg", "png");
+				    chooser.setFileFilter(filter);
+				    int returnVal = chooser.showOpenDialog(MainFrame.getInstance());
+				    if(returnVal == JFileChooser.APPROVE_OPTION)
+				    {
+				    	imagePath=chooser.getSelectedFile().getPath();
+				    	updateImage();
+				    }
+				    	
+					    	    
+			}
+		});
+	    
+	    save.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				slot.setContent(imagePath);
+		}});
+	}
+	
+	public void updateImage()
+	{
+		imagePanel.setImg(imagePath);
+	    imagePanel.setPreferredSize(new Dimension(400,400));
+	    this.repaint();
+	}
+	
+}

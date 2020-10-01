@@ -1,0 +1,87 @@
+package view;
+
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.util.ArrayList;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+
+import model.MyTreeNode;
+
+
+
+public class TabPane extends JTabbedPane  {
+	
+	
+	private ArrayList<MyTreeNode> nodes = new ArrayList<>();
+	
+	public void openTab(MyTreeNode node)
+	{
+		for(int i =0;i<node.getChildCount();i++) {
+			if(!nodes.contains(node.getChildAt(i)))
+			{
+				JPanel panel = new JPanel();
+				panel.setLayout(new GridLayout(node.getChildAt(i).getChildCount(),1));
+				for(int j=0;j<node.getChildAt(i).getChildCount();j++)
+				{
+					String projekat,dokument,list;
+					projekat=node.toString();
+					dokument=node.getChildAt(i).toString();
+					list=node.getChildAt(i).getChildAt(j).toString();
+					JLabel label=new JLabel(projekat+"-"+dokument+"-"+list);
+					panel.add(label);
+				}
+				nodes.add(getTabCount(), (MyTreeNode) node.getChildAt(i));
+				addTab(node.getChildAt(i).toString(), panel);
+				setSelectedComponent(panel);
+				
+				
+			}
+		}
+	}
+	
+	public ArrayList<MyTreeNode> getNodes() {
+		return nodes;
+	}
+	
+	public void setNodeName(MyTreeNode beforeNode, MyTreeNode tempNode)
+	{
+		if(nodes.contains(beforeNode))
+		{
+			int index = nodes.indexOf(beforeNode);
+			setTitleAt(index, tempNode.toString());
+		}
+	}
+
+
+	public void update(Object prev, Object node) {
+		if(prev instanceof MyTreeNode && node instanceof MyTreeNode)
+		{
+			MyTreeNode selected = (MyTreeNode) MainFrame.getInstance().getTree().getLastSelectedPathComponent();
+			TabPane tabPane = this;
+			tabPane.setNodeName((MyTreeNode)prev, (MyTreeNode)node);
+			
+			JPanel panel = new JPanel();
+//			for(int j=0;j<((MyTreeNode)node).getChildCount();j++)
+//			{
+//				String projekat,dokument,list;
+//				projekat=node.toString();
+//				dokument=node.getChildAt(i).toString();
+//				list=node.getChildAt(i).getChildAt(j).toString();
+//				JLabel label=new JLabel(projekat+"-"+dokument+"-"+list);
+//				panel.add(label);
+//			}
+//			
+			SwingUtilities.updateComponentTreeUI(MainFrame.getInstance().getTabPane());
+
+			
+		}
+	}
+
+}

@@ -1,0 +1,56 @@
+package state;
+
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+
+import model.elements.Slot;
+import model.elements.SlotDevice;
+import view.PageView;
+import view.painters.SlotView;
+
+public class DeleteState extends State{
+	
+	private PageView page;
+
+	public DeleteState(PageView pageView) {
+		this.page = pageView;
+	}
+	
+	
+	public void deleteSlot() {
+		if(page.getPage() != null) {
+			for(SlotDevice slots : page.getPage().getSelectedSlots()) {
+				page.getPage().removeDevice(slots);
+			}
+		}
+		page.getPage().getSlotDevices().clear();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent event) {
+		// TODO Auto-generated method stub
+		for (SlotDevice slotDevice : page.getPage().getSelectedSlots()) {
+				page.getPage().setSelectSlot(slotDevice);
+				page.getPage().removeDevice(slotDevice);
+				return;
+		}
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent event) {
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

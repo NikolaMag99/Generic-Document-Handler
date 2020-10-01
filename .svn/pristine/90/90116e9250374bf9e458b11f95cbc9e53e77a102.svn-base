@@ -1,0 +1,81 @@
+package commadns;
+
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
+
+import events.PageEvent.PageEventType;
+import model.Page;
+import model.elements.SlotDevice;
+
+
+
+public class RotateCommand extends Command {
+
+	private Page page;
+	private SlotDevice selSlot;
+	private ArrayList<SlotDevice> slots = new ArrayList<>();
+	private double oldAngle;
+	private double newAngle;
+
+	public RotateCommand(Page page, SlotDevice selSlot, ArrayList<SlotDevice> slots, double oldAngle, double newAngle) {
+		super();
+		this.page = page;
+		for (SlotDevice slo : page.getSlotDevices())
+			if (slo.equals(selSlot)) {
+				this.selSlot = slo;
+				break;
+			}
+
+		for (SlotDevice sl : slots) {
+			for (SlotDevice sll : page.getSlotDevices()) {
+				if (sl.equals(sll)) {
+					this.slots.add(sll);
+				}
+			}
+		}
+		this.oldAngle = oldAngle;
+		this.newAngle = newAngle;
+	}
+
+	@Override
+	public void doCommand() {
+		Point fCenter = new Point(selSlot.getPosition().x + selSlot.getDimension().width / 2,
+								  selSlot.getPosition().y + selSlot.getDimension().height / 2);
+		AffineTransform af = AffineTransform.getRotateInstance(newAngle, fCenter.x, fCenter.y);
+		selSlot.setAngle(newAngle);
+		selSlot.getSlotPainter().setShape(af.createTransformedShape(selSlot.getSlotPainter().getOldShape()));
+
+		for (SlotDevice slotDevice : slots) {
+			Point sCenter = new Point(slotDevice.getPosition().x + slotDevice.getDimension().width / 2,
+					  slotDevice.getPosition().y + slotDevice.getDimension().height / 2);
+			af = AffineTransform.getRotateInstance(newAngle, sCenter.x, sCenter.y);
+			slotDevice.setAngle(newAngle);
+			slotDevice.getSlotPainter().setShape(af.createTransformedShape(slotDevice.getSlotPainter().getOldShape()));
+
+		}
+		//provera
+		page.notifyObservers(PageEventType.DRAW);
+	}
+
+	@Override
+	public void undoCommand() {
+		Point fCenter = new Point(selSlot.getPosition().x + selSlot.getDimension().width / 2,
+				  selSlot.getPosition().y + selSlot.getDimension().height / 2);
+		AffineTransform af = AffineTransform.getRotateInstance(oldAngle, fCenter.x, fCenter.y);
+		selSlot.setAngle(oldAngle);
+		selSlot.getSlotPainter().setShape(af.createTransformedShape(selSlot.getSlotPainter().getOldShape()));
+
+		for (SlotDevice slotDevice : slots) {
+		Point sCenter = new Point(slotDevice.getPosition().x + slotDevice.getDimension().width / 2,
+			  slotDevice.getPosition().y + slotDevice.getDimension().height / 2);
+		af = AffineTransform.getRotateInstance(oldAngle, sCenter.x, sCenter.y);
+		slotDevice.setAngle(oldAngle);
+		slotDevice.getSlotPainter().setShape(af.createTransformedShape(slotDevice.getSlotPainter().getOldShape()));
+
+		}
+
+		page.notifyObservers(PageEventType.DRAW);
+	}
+
+}

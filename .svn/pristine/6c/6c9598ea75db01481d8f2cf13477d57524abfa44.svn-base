@@ -1,0 +1,19 @@
+package factory;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+
+import model.INodeManager;
+
+public abstract class NodeFactory {
+	
+	public void deliverNode(TreeNode parent) {
+		TreeNode node=createNode();
+		 ((INodeManager) parent).addNode(node);
+		
+	}
+	
+	public abstract MutableTreeNode createNode();
+
+}

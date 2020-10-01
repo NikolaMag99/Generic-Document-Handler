@@ -1,0 +1,38 @@
+package view.painters;
+
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+
+import model.elements.RectangleElement;
+import model.elements.Slot;
+
+public class RectanglePainter extends Painter {
+	private RectangleElement prav;
+
+	public RectanglePainter(Slot slotElement) {
+		super(slotElement);
+		
+		prav = (RectangleElement)slotElement;
+		Draw();
+	}
+	
+	@Override
+	public void Draw() {
+		shape = new GeneralPath();
+		
+		
+		((GeneralPath)shape).moveTo(prav.getPosition().x, prav.getPosition().y);
+		((GeneralPath)shape).lineTo(prav.getPosition().x + prav.getDimension().width, prav.getPosition().y);
+		((GeneralPath)shape).lineTo(prav.getPosition().x + prav.getDimension().width, prav.getPosition().y + prav.getDimension().height);
+		((GeneralPath)shape).lineTo(prav.getPosition().x, prav.getPosition().y + prav.getDimension().height);
+		((GeneralPath)shape).closePath();
+		
+		oldShape = shape;
+
+		Point figCenter = new Point(prav.getPosition().x + prav.getDimension().width/2,
+				prav.getPosition().y+prav.getDimension().height/2);
+		AffineTransform af = AffineTransform.getRotateInstance(prav.getAngle(), figCenter.x, figCenter.y);
+		shape = af.createTransformedShape(shape);
+	}
+}

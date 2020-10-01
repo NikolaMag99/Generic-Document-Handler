@@ -1,0 +1,31 @@
+package gui.segments;
+
+import java.awt.Color;
+
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+
+import actions.manager.ActionManager;
+import state.StateManager;
+
+public class SlotToolbarGerudok extends JToolBar {
+	
+	private StateManager stateManager;
+		
+	public SlotToolbarGerudok() {
+	super(SwingConstants.VERTICAL);
+	this.stateManager = new StateManager();;
+
+	
+	add(ActionManager.getInstance().getCircleAction());
+	add(ActionManager.getInstance().getRectangleAction());
+	add(ActionManager.getInstance().getTriangleAction());
+	
+	setFloatable(true);
+	
+	}
+	
+	public StateManager getStateManager() {
+		return stateManager;
+	}
+}

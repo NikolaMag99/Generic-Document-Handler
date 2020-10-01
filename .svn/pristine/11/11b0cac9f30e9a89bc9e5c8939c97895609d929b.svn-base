@@ -1,0 +1,38 @@
+package actions;
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
+import javax.swing.tree.TreePath;
+
+import actions.manager.AbstractActionIcon;
+import gui.MainFrameGerudok;
+import model.Project;
+import model.Workspace;
+
+@SuppressWarnings("serial")
+public class NewProjectAction extends AbstractActionIcon {
+
+	public NewProjectAction(Dimension d) {
+		putValue(ACCELERATOR_KEY,
+				KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+		putValue(MNEMONIC_KEY, KeyEvent.VK_N);
+		putValue(SMALL_ICON, iconGetter("/toolbar/addproj.png", d));
+		putValue(NAME, ("NewProject"));
+		putValue(SHORT_DESCRIPTION, ("NewProjectH"));
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// dodavanje novog projekta u JTree
+		JTree tree = MainFrameGerudok.getInstance().getTree();
+		TreePath path = tree.getSelectionPath();
+		tree.expandPath(path);
+		Project project = new Project();
+		((Workspace) tree.getModel().getRoot()).addProject(project);
+	}
+}

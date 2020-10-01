@@ -1,0 +1,50 @@
+package view;
+
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+
+import model.elements.ElementType;
+import model.elements.Slot;
+
+public class ElementChooser extends JDialog {
+
+	public ElementChooser(Frame parent, String title, boolean modal, Slot slot) {
+		super(parent, title, modal);
+		// JPanel panel=new JPanel(new GridLayout(0,2));
+
+		this.setLayout(new GridLayout(0, 2));
+		setSize(400, 200);
+		setLocationRelativeTo(parent);
+
+		JButton text = new JButton("Text");
+		JButton image = new JButton("Image");
+
+		add(text);
+		add(image);
+
+		text.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				slot.setType(ElementType.TEXT);
+				dispose();
+			}
+		});
+
+		image.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				slot.setType(ElementType.IMAGE);
+				dispose();
+			}
+		});
+
+	}
+
+}

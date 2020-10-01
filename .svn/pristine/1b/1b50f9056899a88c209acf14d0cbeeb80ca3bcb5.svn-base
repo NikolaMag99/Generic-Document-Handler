@@ -1,0 +1,11 @@
+package state;
+
+import java.awt.event.MouseEvent;
+
+public abstract class State {
+	
+	public abstract void mousePressed(MouseEvent e);
+	public abstract void mouseDragged(MouseEvent e);
+	public abstract void mouseReleased(MouseEvent e);
+
+}

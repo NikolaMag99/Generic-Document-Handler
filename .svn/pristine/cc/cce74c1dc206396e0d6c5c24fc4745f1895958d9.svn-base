@@ -1,0 +1,64 @@
+package state;
+
+import java.awt.Point;
+import java.awt.Shape;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+
+import model.Page;
+import model.elements.SlotDevice;
+
+public class RotateState extends State {
+
+	private Page page;
+
+	public RotateState(Page page) {
+		this.page = page;
+	}
+
+	@Override
+	public void mousePressed(MouseEvent event) {
+		for (SlotDevice slotDevice : page.getSlotDevices()) {
+			if (slotDevice.getSlotPainter().elementAt(event.getPoint())) {
+				page.setSelectSlot(slotDevice);
+				return;
+			}
+		}
+		page.setSelectSlot(null);
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent event) {
+		Point pos = event.getPoint();
+		if (page.getSelectSlot() != null) {
+			Point center = new Point(
+					page.getSelectSlot().getPosition().x + page.getSelectSlot().getDimension().width / 2,
+					page.getSelectSlot().getPosition().y + page.getSelectSlot().getDimension().height / 2);
+			Shape slotShape = page.getSelectSlot().getSlotPainter().getOldShape();
+			double ang = getAngle(center, pos);
+			AffineTransform af = AffineTransform.getRotateInstance(ang, center.x, center.y);
+
+			page.getSelectSlot().setAngle(ang);
+			page.getSelectSlot().getSlotPainter().setShape(af.createTransformedShape(slotShape));
+
+		}
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private double getAngle(Point slotCenter, Point mousePoint) {
+		return Math.atan2(mousePoint.y - slotCenter.y, mousePoint.x - slotCenter.x);
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

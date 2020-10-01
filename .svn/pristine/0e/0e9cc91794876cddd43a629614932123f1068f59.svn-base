@@ -1,0 +1,10 @@
+package tree.listener;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class TreeMouseListener extends MouseAdapter {
+
+	public void mousePressed(MouseEvent e) {
+	}
+}

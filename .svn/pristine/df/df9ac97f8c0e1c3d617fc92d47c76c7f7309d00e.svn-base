@@ -1,0 +1,79 @@
+package model;
+
+import java.io.File;
+
+import javax.swing.tree.DefaultTreeModel;
+
+import model.MyTreeNode;
+
+
+
+public class MyTreeModel extends DefaultTreeModel{
+
+	private static MyTreeNode root=new MyTreeNode("Workspace");
+	private File file;
+	
+	public MyTreeModel() {
+		super(root=new MyTreeNode("Workspace"));
+		
+	}
+	
+	public void addChild(MyTreeNode node)
+	{
+		root.getChildren().add(node);
+		node.setParent(root);
+	}
+	
+	public MyTreeNode getRoot() {
+		// TODO Auto-generated method stub
+		return root;
+	}
+	
+	public void setRoot(MyTreeNode root1) {
+		// TODO Auto-generated method stub
+		 root = root1;
+	}
+	
+	public void removeRoot()
+	{
+		this.setRoot(null);
+	}
+	
+	
+	public MyTreeNode getChild(MyTreeNode parent, int index) {
+		// TODO Auto-generated method stub
+		return (MyTreeNode) parent.getChildAt(index);
+	}
+	
+	public int getChildCount(MyTreeNode parent) {
+		// TODO Auto-generated method stub
+		return parent.getChildCount();
+	}
+	
+	public boolean isLeaf(MyTreeNode node) {
+		if(node.getChildCount() == 0)
+			return true;
+		return false;
+	}
+	
+	public int getIndexOfChild(MyTreeNode parent, MyTreeNode child) {
+		// TODO Auto-generated method stub
+		return parent.getIndex(child);
+	}
+	
+	public void removeAll()
+	{
+		root.removeAllChildren();
+	}
+	public void setFile(File file) {
+		this.file = file;
+	}
+	
+	public File getFile() {
+		return file;
+	}
+	
+	
+	
+	
+}
